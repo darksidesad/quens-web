@@ -45,6 +45,18 @@
   height: 100lvh;
 }
 
+/* Tamaño del fondo: en escritorio cubre toda la pantalla; en móvil se muestra
+   la imagen completa (más "alejada") para que no se vea tan grande/recortada. */
+.site-bg-image {
+  background-size: cover;
+}
+
+@media (max-width: 768px) {
+  .site-bg-image {
+    background-size: contain;
+  }
+}
+
 /* Texto con degradado dorado cálido (más color, dentro de la paleta) */
 .gold-text {
   background: linear-gradient(
