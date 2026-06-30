@@ -20,7 +20,7 @@ export function SiteBackground({ children }: Props) {
         <>
           <div
             aria-hidden
-            className="site-bg-layer pointer-events-none z-0 bg-cover bg-center bg-no-repeat"
+            className="site-bg-layer site-bg-image pointer-events-none z-0 bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${imageUrl(fondo)})` }}
           />
           <div
