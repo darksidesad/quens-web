@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import type { Content } from '@quenns/shared';
 import { getSortedServicios, tLocalized, ui, formatCop } from '@quenns/shared';
 import { fetchContent, imageUrl } from '../lib/api';
-import { LangProvider, useLang } from '../lib/lang';
+import { PublicShell } from './PublicShell';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { useLang } from '../lib/lang';
 
 function ServiciosContent() {
   const { lang } = useLang();
@@ -50,8 +51,8 @@ function ServiciosContent() {
 
 export default function ServiciosPage() {
   return (
-    <LangProvider>
+    <PublicShell>
       <ServiciosContent />
-    </LangProvider>
+    </PublicShell>
   );
 }

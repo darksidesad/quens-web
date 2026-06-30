@@ -43,6 +43,11 @@ export const ChicaSchema = z.object({
 export type Chica = z.infer<typeof ChicaSchema>;
 
 export const ContentSchema = z.object({
+  apariencia: z
+    .object({
+      fondo: z.string().default(''),
+    })
+    .default({ fondo: '' }),
   home: z.object({
     hero: z.object({
       titulo: LocalizedStringSchema,
@@ -163,6 +168,9 @@ export function getSortedServicios(content: Content): Servicio[] {
 }
 
 export const defaultContent: Content = {
+  apariencia: {
+    fondo: '',
+  },
   home: {
     hero: {
       titulo: { es: 'Quenns Spa', en: 'Quenns Spa' },

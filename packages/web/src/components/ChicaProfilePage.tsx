@@ -9,10 +9,12 @@ import {
   whatsappUrl,
   chicaWhatsappMessage,
 } from '@quenns/shared';
-import { fetchContent, imageUrl } from '../lib/api';
-import { LangProvider, useLang } from '../lib/lang';
+import { fetchContent } from '../lib/api';
+import { PublicShell } from './PublicShell';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { ChicaGallery } from './ChicaGallery';
+import { useLang } from '../lib/lang';
 
 interface Props {
   slug: string;
@@ -65,22 +67,7 @@ function ChicaProfileContent({ slug: propSlug }: Props) {
       <main className="pt-28 pb-20 max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           <div>
-            {chica.fotos.length > 0 ? (
-              <div className="space-y-4">
-                <img src={imageUrl(chica.fotos[0])} alt={nombre} className="w-full aspect-[4/5] object-cover rounded-lg border border-border" />
-                {chica.fotos.length > 1 && (
-                  <div className="grid grid-cols-3 gap-2">
-                    {chica.fotos.slice(1).map((f, i) => (
-                      <img key={i} src={imageUrl(f)} alt="" className="aspect-square object-cover rounded border border-border" loading="lazy" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="w-full aspect-[4/5] bg-surface border border-border rounded-lg flex items-center justify-center text-6xl text-gold font-[family-name:var(--font-display)]">
-                {nombre[0]}
-              </div>
-            )}
+            <ChicaGallery fotos={chica.fotos} nombre={nombre} />
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl text-gold mb-4">{nombre}</h1>
@@ -130,8 +117,8 @@ function ChicaProfileContent({ slug: propSlug }: Props) {
 
 export default function ChicaProfilePage({ slug }: Props) {
   return (
-    <LangProvider>
+    <PublicShell>
       <ChicaProfileContent slug={slug} />
-    </LangProvider>
+    </PublicShell>
   );
 }

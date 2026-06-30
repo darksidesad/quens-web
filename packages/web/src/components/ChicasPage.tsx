@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import type { Content } from '@quenns/shared';
 import { getActiveChicas, tLocalized, ui } from '@quenns/shared';
 import { fetchContent, imageUrl } from '../lib/api';
-import { LangProvider, useLang } from '../lib/lang';
+import { PublicShell } from './PublicShell';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { useLang } from '../lib/lang';
 
 function ChicasContent() {
   const { lang } = useLang();
@@ -54,8 +55,8 @@ function ChicasContent() {
 
 export default function ChicasPage() {
   return (
-    <LangProvider>
+    <PublicShell>
       <ChicasContent />
-    </LangProvider>
+    </PublicShell>
   );
 }

@@ -9,7 +9,7 @@ import {
   formatCop,
 } from '@quenns/shared';
 import { fetchContent, imageUrl } from '../lib/api';
-import { LangProvider } from '../lib/lang';
+import { PublicShell } from './PublicShell';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Map } from './Map';
@@ -103,8 +103,8 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <LangProvider>
+    <PublicShell>
       <HomeContent />
-    </LangProvider>
+    </PublicShell>
   );
 }

@@ -16,6 +16,12 @@ describe('ContentSchema', () => {
     expect(() => ContentSchema.parse(defaultContent)).not.toThrow();
   });
 
+  it('añade apariencia por defecto en JSON antiguo', () => {
+    const { apariencia: _, ...legacy } = defaultContent;
+    const parsed = ContentSchema.parse(legacy);
+    expect(parsed.apariencia.fondo).toBe('');
+  });
+
   it('rechaza slug inválido', () => {
     const bad = structuredClone(defaultContent);
     bad.chicas[0].slug = 'Sofia Invalid';

@@ -184,6 +184,25 @@ export default function AdminApp() {
     }
   };
 
+  const handleUploadFiles = async (files: FileList | File[], buildContent: (urls: string[]) => Content) => {
+    if (!token || !content) return;
+    const list = Array.from(files);
+    if (list.length === 0) return;
+    setUploading(true);
+    setMessage('');
+    try {
+      const urls: string[] = [];
+      for (const file of list) {
+        urls.push(await uploadFile(file, token));
+      }
+      await persist(buildContent(urls));
+    } catch {
+      showMessage('Error al subir imagen');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleLogout = () => {
     setToken(null);
     setTokenState(null);
@@ -371,11 +390,15 @@ export default function AdminApp() {
                   }}
                 />
                 <div>
-                  <label className="text-xs text-gold uppercase tracking-widest">Fotos</label>
+                  <div className="flex items-center justify-between gap-2">
+                    <label className="text-xs text-gold uppercase tracking-widest">Galería de fotos</label>
+                    <span className="text-xs text-muted">{selectedChica.fotos.length} foto(s)</span>
+                  </div>
+                  <p className="text-xs text-muted mt-1 mb-2">Puedes subir varias imágenes a la vez.</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedChica.fotos.map((f, i) => (
-                      <div key={i} className="relative">
-                        <img src={f} alt="" className="w-20 h-20 object-cover rounded border border-border" />
+                      <div key={`${f}-${i}`} className="relative">
+                        <img src={f} alt="" className="w-24 h-24 object-cover rounded border border-border" />
                         <button
                           type="button"
                           className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full"
@@ -390,23 +413,27 @@ export default function AdminApp() {
                       </div>
                     ))}
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="mt-2 text-sm disabled:opacity-50"
-                    disabled={uploading || saving}
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file || !selectedChica) return;
-                      e.target.value = '';
-                      await handleUpload(file, (url) => ({
-                        ...content,
-                        chicas: content.chicas.map((c) =>
-                          c.id === selectedChica.id ? { ...c, fotos: [...c.fotos, url] } : c,
-                        ),
-                      }));
-                    }}
-                  />
+                  <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-gold hover:bg-gold/10">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="sr-only"
+                      disabled={uploading || saving}
+                      onChange={async (e) => {
+                        const files = e.target.files;
+                        if (!files?.length || !selectedChica) return;
+                        e.target.value = '';
+                        await handleUploadFiles(files, (urls) => ({
+                          ...content,
+                          chicas: content.chicas.map((c) =>
+                            c.id === selectedChica.id ? { ...c, fotos: [...c.fotos, ...urls] } : c,
+                          ),
+                        }));
+                      }}
+                    />
+                    + Añadir fotos
+                  </label>
                   {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div>
@@ -657,7 +684,45 @@ export default function AdminApp() {
         )}
 
         {tab === 'home' && (
-          <div className="bg-surface border border-border p-6 rounded-lg space-y-4 max-w-lg">
+          <div className="bg-surface border border-border p-6 rounded-lg space-y-6 max-w-lg">
+            <div>
+              <label className="text-xs text-gold uppercase">Imagen de fondo del sitio</label>
+              <p className="text-xs text-muted mt-1 mb-2">
+                Se muestra en todas las páginas públicas con un degradado oscuro encima.
+              </p>
+              {content.apariencia.fondo && (
+                <img src={content.apariencia.fondo} alt="" className="w-full h-40 object-cover mt-2 rounded border border-border" />
+              )}
+              <div className="flex flex-wrap gap-2 mt-2">
+                <label className="inline-flex cursor-pointer items-center rounded border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-gold hover:bg-gold/10">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    disabled={uploading || saving}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      e.target.value = '';
+                      await handleUpload(file, (url) => ({
+                        ...content,
+                        apariencia: { ...content.apariencia, fondo: url },
+                      }));
+                    }}
+                  />
+                  Subir fondo
+                </label>
+                {content.apariencia.fondo && (
+                  <AdminButton
+                    variant="danger"
+                    disabled={uploading || saving}
+                    onClick={() => persist({ ...content, apariencia: { ...content.apariencia, fondo: '' } })}
+                  >
+                    Quitar fondo
+                  </AdminButton>
+                )}
+              </div>
+            </div>
             <LocalizedInput
               label="Título hero"
               value={content.home.hero.titulo}
