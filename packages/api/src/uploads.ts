@@ -8,6 +8,7 @@ const MIME: Record<string, string> = {
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.webp': 'image/webp',
+  '.gif': 'image/gif',
 };
 
 export function resolveUploadFilename(requestPath: string): string | null {
@@ -39,8 +40,8 @@ export async function serveUploadFile(
 }
 
 export function isAllowedImage(file: { type: string; name: string }): boolean {
-  const allowed = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg']);
+  const allowed = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/gif']);
   if (allowed.has(file.type)) return true;
   const ext = file.name.split('.').pop()?.toLowerCase();
-  return ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp';
+  return ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp' || ext === 'gif';
 }
