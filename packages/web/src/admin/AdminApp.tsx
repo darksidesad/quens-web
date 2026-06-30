@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Content, Chica, Servicio, Dia } from '@quenns/shared';
 import { DIA_LABELS } from '@quenns/shared';
 import {
@@ -20,6 +20,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { fetchContent, login, saveContent, uploadFile, getToken, setToken } from '../lib/api';
 import { AdminButton } from './AdminButton';
+import { AdminToast } from './AdminToast';
 
 type Tab = 'dashboard' | 'chicas' | 'servicios' | 'home' | 'contacto';
 
@@ -106,6 +107,35 @@ export default function AdminApp() {
   const [uploading, setUploading] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
   const [message, setMessage] = useState('');
+  const [saveFlash, setSaveFlash] = useState(false);
+  const messageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showMessage = useCallback((text: string, ms = 2500) => {
+    if (messageTimer.current) clearTimeout(messageTimer.current);
+    setMessage(text);
+    messageTimer.current = setTimeout(() => setMessage(''), ms);
+  }, []);
+
+  const persist = useCallback(async (updated: Content) => {
+    if (!token) return;
+    setSaving(true);
+    setSaveFlash(false);
+    setMessage('');
+    const started = Date.now();
+    try {
+      const saved = await saveContent(updated, token);
+      setContent(saved);
+      const wait = Math.max(0, 550 - (Date.now() - started));
+      if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+      setSaveFlash(true);
+      showMessage('Guardado correctamente');
+      setTimeout(() => setSaveFlash(false), 1200);
+    } catch {
+      showMessage('Error al guardar');
+    } finally {
+      setSaving(false);
+    }
+  }, [token, showMessage]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -147,28 +177,10 @@ export default function AdminApp() {
     try {
       const url = await uploadFile(file, token);
       await persist(applyUrl(url));
-      setMessage('Imagen subida ✓');
-      setTimeout(() => setMessage(''), 2000);
     } catch {
-      setMessage('Error al subir imagen');
+      showMessage('Error al subir imagen');
     } finally {
       setUploading(false);
-    }
-  };
-
-  const persist = async (updated: Content) => {
-    if (!token) return;
-    setSaving(true);
-    setMessage('');
-    try {
-      const saved = await saveContent(updated, token);
-      setContent(saved);
-      setMessage('Guardado ✓');
-      setTimeout(() => setMessage(''), 2000);
-    } catch {
-      setMessage('Error al guardar');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -231,8 +243,6 @@ export default function AdminApp() {
       <header className="border-b border-border bg-surface px-6 py-4 flex items-center justify-between">
         <h1 className="text-gold tracking-widest font-semibold">QUENNS ADMIN</h1>
         <div className="flex items-center gap-4">
-          {message && <span className="text-sm text-green-400">{message}</span>}
-          {saving && <span className="text-sm text-muted">Guardando...</span>}
           <button type="button" onClick={handleLogout} className="text-xs text-muted hover:text-gold">
             Salir
           </button>
@@ -482,7 +492,7 @@ export default function AdminApp() {
                   </div>
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <AdminButton loading={saving} className="flex-1" onClick={() => persist(content)}>
+                  <AdminButton loading={saving} success={saveFlash} className="flex-1" onClick={() => persist(content)}>
                     Guardar
                   </AdminButton>
                   <a
@@ -626,7 +636,7 @@ export default function AdminApp() {
                   {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div className="flex gap-2">
-                  <AdminButton loading={saving} className="flex-1" onClick={() => persist(content)}>
+                  <AdminButton loading={saving} success={saveFlash} className="flex-1" onClick={() => persist(content)}>
                     Guardar
                   </AdminButton>
                   <AdminButton
@@ -678,7 +688,7 @@ export default function AdminApp() {
               />
               {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
             </div>
-            <AdminButton loading={saving} className="w-full" onClick={() => persist(content)}>
+            <AdminButton loading={saving} success={saveFlash} className="w-full" onClick={() => persist(content)}>
               Guardar home
             </AdminButton>
           </div>
@@ -738,12 +748,13 @@ export default function AdminApp() {
                 onChange={(e) => setContent({ ...content, contacto: { ...content.contacto, instagram: e.target.value } })}
               />
             </div>
-            <AdminButton loading={saving} className="w-full" onClick={() => persist(content)}>
+            <AdminButton loading={saving} success={saveFlash} className="w-full" onClick={() => persist(content)}>
               Guardar contacto
             </AdminButton>
           </div>
         )}
       </main>
+      <AdminToast saving={saving} uploading={uploading} message={message} />
     </div>
   );
 }
