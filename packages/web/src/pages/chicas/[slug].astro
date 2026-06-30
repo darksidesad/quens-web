@@ -17,8 +17,15 @@ export function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+const nombre = (slug ?? '')
+  .split('-')
+  .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+  .join(' ');
 ---
 
-<BaseLayout title={`Quenns Spa | ${slug}`}>
+<BaseLayout
+  title={`${nombre} | Quenns Spa`}
+  description={`Conoce a ${nombre}, especialista en masajes y terapias de bienestar en Quenns Spa. Reserva tu cita por WhatsApp.`}
+>
   <ChicaProfilePage slug={slug!} client:load />
 </BaseLayout>

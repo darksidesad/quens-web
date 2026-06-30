@@ -5,6 +5,7 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   output: 'static',
+  site: process.env.PUBLIC_SITE_URL || 'https://quenns.com',
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
