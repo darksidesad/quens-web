@@ -1,5 +1,8 @@
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg']);
+const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/gif']);
 const MAX_BYTES = 4 * 1024 * 1024;
+// Los formatos animados (GIF) no se pueden recomprimir sin perder el movimiento,
+// así que se permiten hasta el límite que acepta el servidor.
+const MAX_ANIMATED_BYTES = 10 * 1024 * 1024;
 const MAX_DIMENSION = 2048;
 
 function toJpegName(name: string): string {
@@ -66,8 +69,18 @@ async function compressToJpeg(file: File): Promise<File> {
 export async function prepareImageForUpload(file: File): Promise<File> {
   const ext = file.name.split('.').pop()?.toLowerCase() || '';
   const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || ext === 'heic' || ext === 'heif';
-  const hasKnownExt = ['jpg', 'jpeg', 'png', 'webp'].includes(ext);
+  const isGif = file.type === 'image/gif' || ext === 'gif';
+  const hasKnownExt = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext);
   const hasKnownType = ALLOWED_TYPES.has(file.type) || (!file.type && hasKnownExt);
+
+  // Los GIF se suben sin tocar para conservar la animación (no se pueden
+  // recomprimir en canvas sin convertirlos en una imagen fija).
+  if (isGif) {
+    if (file.size > MAX_ANIMATED_BYTES) {
+      throw new Error('El GIF es muy pesado (máx. 10 MB). Prueba con uno más liviano.');
+    }
+    return file;
+  }
 
   if (hasKnownType && file.size <= MAX_BYTES && !isHeic) {
     return file;
