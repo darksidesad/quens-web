@@ -47,9 +47,12 @@ function HomeContent() {
             style={{ background: 'radial-gradient(circle, var(--color-silver) 0%, transparent 65%)' }}
           />
           <div className="relative z-10 text-center px-6 max-w-3xl">
-            <span className="silver-divider w-24 mx-auto mb-8 animate-fade-up" style={{ animationDelay: '0.05s' }} />
-            <h1 className="text-5xl md:text-7xl text-gold mb-6 animate-fade-up" style={{ animationDelay: '0.15s' }}>
-              <span className="silver-text">{tLocalized(content.home.hero.titulo, lang)}</span>
+            <span className="silver-divider w-24 mx-auto mb-6 animate-fade-up" style={{ animationDelay: '0.05s' }} />
+            <p className="eyebrow mb-3 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+              {lang === 'es' ? 'Bienestar & Lujo' : 'Wellness & Luxury'}
+            </p>
+            <h1 className="text-5xl md:text-7xl mb-6 animate-fade-up" style={{ animationDelay: '0.15s' }}>
+              <span className="gold-text">{tLocalized(content.home.hero.titulo, lang)}</span>
             </h1>
             <p className="text-lg md:text-xl text-muted mb-10 animate-fade-up" style={{ animationDelay: '0.3s' }}>
               {tLocalized(content.home.hero.subtitulo, lang)}
@@ -75,7 +78,9 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6 py-20">
+        <section className="relative max-w-6xl mx-auto px-6 py-20">
+          <span className="glow-gold left-1/4 top-0 h-72 w-72 -translate-x-1/2" aria-hidden />
+          <p className="eyebrow text-center block">{lang === 'es' ? 'Experiencias' : 'Experiences'}</p>
           <h2 className="text-3xl text-center text-gold">{ui('ourServices', lang)}</h2>
           <span className="silver-accent" />
           <div className="grid md:grid-cols-3 gap-8 mt-12">
@@ -105,7 +110,9 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6 py-20">
+        <section className="relative max-w-6xl mx-auto px-6 py-20">
+          <span className="glow-gold right-1/4 top-10 h-72 w-72 translate-x-1/2" aria-hidden />
+          <p className="eyebrow text-center block">{lang === 'es' ? 'Nuestro equipo' : 'Our team'}</p>
           <h2 className="text-3xl text-center text-gold">{ui('meetTeam', lang)}</h2>
           <span className="silver-accent" />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
@@ -139,7 +146,8 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6 py-20">
+        <section className="relative max-w-6xl mx-auto px-6 py-20">
+          <p className="eyebrow text-center block">{lang === 'es' ? 'Visítanos' : 'Visit us'}</p>
           <h2 className="text-3xl text-center text-gold">{ui('location', lang)}</h2>
           <span className="silver-accent" />
           <p className="text-center text-muted mt-6 mb-8">{tLocalized(content.contacto.direccion, lang)}</p>

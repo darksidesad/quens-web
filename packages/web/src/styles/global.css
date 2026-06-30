@@ -13,6 +13,7 @@
   --color-muted: #8a8578;
   --color-border: #2a2820;
   --font-display: "Playfair Display", Georgia, serif;
+  --font-accent: "Cormorant Garamond", Georgia, serif;
   --font-body: "Montserrat", system-ui, sans-serif;
 }
 
@@ -28,6 +29,61 @@
   h1, h2, h3 {
     @apply font-[family-name:var(--font-display)];
   }
+}
+
+/* Texto con degradado dorado cálido (más color, dentro de la paleta) */
+.gold-text {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold) 0%,
+    var(--color-gold-light) 45%,
+    #fff4d6 50%,
+    var(--color-gold-light) 55%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: silver-shine 6s linear infinite;
+}
+
+/* Etiqueta decorativa elegante sobre los títulos */
+.eyebrow {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Resplandor dorado suave para el fondo de secciones */
+.glow-gold {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.12;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--color-gold) 0%, transparent 65%);
+}
+
+/* Botón flotante de WhatsApp: anillo pulsante */
+@keyframes fab-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%, 100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.fab-ring {
+  animation: fab-ring 2s ease-out infinite;
 }
 
 .gold-divider {
@@ -140,7 +196,9 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-float,
-  .silver-text {
+  .silver-text,
+  .gold-text,
+  .fab-ring {
     animation: none;
   }
   .animate-fade-up {
