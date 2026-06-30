@@ -39,8 +39,13 @@ export async function saveContent(content: Content, token: string): Promise<Cont
     body: JSON.stringify(content),
   });
   if (!res.ok) {
-    const body = await res.json().catch(() => ({})) as { error?: string };
-    throw new Error(body.error === 'Validation failed' ? 'Datos inválidos al guardar' : 'Error al guardar');
+    const body = await res.json().catch(() => ({})) as { error?: string; details?: { fieldErrors?: Record<string, string[]> } };
+    if (body.error === 'Validation failed') {
+      const fields = body.details?.fieldErrors;
+      const hint = fields ? Object.keys(fields).slice(0, 2).join(', ') : '';
+      throw new Error(hint ? `Datos inválidos: ${hint}` : 'Datos inválidos al guardar');
+    }
+    throw new Error(body.error || 'Error al guardar');
   }
   return res.json();
 }

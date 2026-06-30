@@ -64,20 +64,25 @@ async function compressToJpeg(file: File): Promise<File> {
 
 /** Comprime y normaliza imágenes del móvil antes de subirlas al servidor. */
 export async function prepareImageForUpload(file: File): Promise<File> {
-  const ext = file.name.split('.').pop()?.toLowerCase();
+  const ext = file.name.split('.').pop()?.toLowerCase() || '';
   const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || ext === 'heic' || ext === 'heif';
+  const hasKnownExt = ['jpg', 'jpeg', 'png', 'webp'].includes(ext);
+  const hasKnownType = ALLOWED_TYPES.has(file.type) || (!file.type && hasKnownExt);
 
-  if (ALLOWED_TYPES.has(file.type) && file.size <= MAX_BYTES && !isHeic) {
+  if (hasKnownType && file.size <= MAX_BYTES && !isHeic) {
     return file;
   }
 
   try {
     return await compressToJpeg(file);
   } catch {
+    if (hasKnownExt && file.size <= 10 * 1024 * 1024) {
+      return file;
+    }
     if (isHeic) {
       throw new Error('Fotos HEIC de iPhone no son compatibles. Cambia a JPG en Ajustes → Cámara → Formatos.');
     }
-    if (!ALLOWED_TYPES.has(file.type)) {
+    if (!hasKnownType && !hasKnownExt) {
       throw new Error('Formato no válido. Usa JPG, PNG o WEBP.');
     }
     throw new Error('No se pudo procesar la imagen. Prueba con otra foto.');

@@ -197,23 +197,24 @@ export default function AdminApp() {
     }
   };
 
-  const appendChicaFotos = async (chicaId: string, files: FileList | File[]) => {
+  const appendChicaFotos = async (chicaId: string, files: File[]) => {
     if (!token) {
       showMessage('Sesión expirada. Vuelve a entrar al admin.');
       return;
     }
-    const list = Array.from(files);
-    if (list.length === 0) return;
+    if (files.length === 0) return;
     setUploading(true);
     setMessage('');
     try {
       const urls: string[] = [];
-      for (const raw of list) {
+      for (const raw of files) {
         const prepared = await prepareImageForUpload(raw);
         urls.push(await uploadFile(prepared, token));
       }
       const current = contentRef.current;
       if (!current) throw new Error('Contenido no cargado');
+      const target = current.chicas.find((c) => c.id === chicaId);
+      if (!target) throw new Error('Chica no encontrada. Selecciónala de nuevo.');
       const updated: Content = {
         ...current,
         apariencia: current.apariencia ?? { fondo: '' },
@@ -221,7 +222,8 @@ export default function AdminApp() {
           c.id === chicaId ? { ...c, fotos: [...c.fotos, ...urls] } : c,
         ),
       };
-      await persist(updated);
+      const ok = await persist(updated);
+      if (!ok) throw new Error('No se pudo guardar las fotos');
     } catch (err) {
       showMessage(err instanceof Error ? err.message : 'Error al subir imagen');
     } finally {
@@ -422,7 +424,7 @@ export default function AdminApp() {
                     <label className="text-xs text-gold uppercase tracking-widest">Galería de fotos</label>
                     <span className="text-xs text-muted">{selectedChica.fotos.length} foto(s)</span>
                   </div>
-                  <p className="text-xs text-muted mt-1 mb-2">JPG, PNG o WEBP. Las fotos del móvil se comprimen automáticamente.</p>
+                  <p className="text-xs text-muted mt-1 mb-2">Toca el botón dorado para elegir una o varias fotos.</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedChica.fotos.map((f, i) => (
                       <div key={`${f}-${i}`} className="relative">
@@ -441,28 +443,23 @@ export default function AdminApp() {
                       </div>
                     ))}
                   </div>
-                  <label
-                    className={`mt-3 inline-flex cursor-pointer items-center gap-2 rounded border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-gold hover:bg-gold/10 ${
-                      uploading || saving ? 'pointer-events-none opacity-50' : ''
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                      multiple
-                      className="sr-only"
-                      disabled={uploading || saving}
-                      onChange={async (e) => {
-                        const files = e.target.files;
-                        const chicaId = selectedChica.id;
-                        e.target.value = '';
-                        if (!files?.length) return;
-                        await appendChicaFotos(chicaId, files);
-                      }}
-                    />
-                    {uploading ? 'Subiendo...' : '+ Añadir fotos'}
-                  </label>
-                  {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    disabled={uploading || saving}
+                    className="mt-3 block w-full text-sm text-muted file:mr-4 file:cursor-pointer file:rounded file:border-0 file:bg-gold file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-widest file:text-bg hover:file:bg-gold-light disabled:opacity-50"
+                    onChange={(e) => {
+                      const input = e.currentTarget;
+                      const picked = input.files ? Array.from(input.files) : [];
+                      const chicaId = selectedChica.id;
+                      if (!picked.length) return;
+                      void appendChicaFotos(chicaId, picked).finally(() => {
+                        input.value = '';
+                      });
+                    }}
+                  />
+                  {uploading && <p className="text-xs text-gold mt-2 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div>
                   <label className="text-xs text-gold uppercase tracking-widest">Servicios</label>
