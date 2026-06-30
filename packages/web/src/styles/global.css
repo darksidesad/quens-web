@@ -32,7 +32,22 @@
   background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
 }
 
-.glass {
-  background: rgba(18, 18, 18, 0.85);
-  backdrop-filter: blur(12px);
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
 }

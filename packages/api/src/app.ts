@@ -19,13 +19,13 @@ import {
   getUploadsDir,
 } from './storage.js';
 import { createToken, verifyToken, extractBearer } from './auth.js';
+import { serveUploadFile, isAllowedImage } from './uploads.js';
 
 function mkdirSyncSafe(dir: string) {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 }
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 export interface AppConfig {
   dataDir: string;
@@ -95,7 +95,7 @@ export function createApp(config: AppConfig) {
     if (!file || typeof file === 'string') {
       return c.json({ error: 'No file provided' }, 400);
     }
-    if (!ALLOWED_TYPES.has(file.type)) {
+    if (!isAllowedImage(file)) {
       return c.json({ error: 'Invalid file type' }, 400);
     }
     if (file.size > MAX_UPLOAD_BYTES) {
@@ -116,7 +116,13 @@ export function createApp(config: AppConfig) {
 
   const uploadsDir = getUploadsDir(config.dataDir);
   mkdirSyncSafe(uploadsDir);
-  app.get('/uploads/*', serveStatic({ root: uploadsDir }));
+
+  app.use('*', async (c, next) => {
+    if (c.req.method !== 'GET') return next();
+    const pathname = new URL(c.req.url).pathname;
+    if (!pathname.startsWith('/uploads/')) return next();
+    return serveUploadFile(c, uploadsDir, pathname);
+  });
 
   if (config.staticDir && existsSync(config.staticDir)) {
     app.get('/_astro/*', serveStatic({ root: join(config.staticDir, '_astro') }));

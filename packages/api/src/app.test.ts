@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtemp, rm } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createApp } from './app.js';
 import { defaultContent } from '@quenns/shared';
+import { getUploadsDir } from './storage.js';
 
 const ADMIN_PASSWORD = 'test-admin-pass';
 const JWT_SECRET = 'test-jwt-secret';
@@ -126,10 +128,23 @@ describe('API', () => {
     expect(url).toMatch(/^\/uploads\//);
   });
 
-  it('POST /api/upload rechaza sin auth', async () => {
+  it('GET /uploads sirve imagen subida', async () => {
+    const token = await login();
     const form = new FormData();
-    form.append('file', new Blob(['x'], { type: 'image/jpeg' }), 'x.jpg');
-    const res = await request('/api/upload', { method: 'POST', body: form });
-    expect(res.status).toBe(401);
+    const blob = new Blob([new Uint8Array([0xff, 0xd8, 0xff, 0x00])], { type: 'image/jpeg' });
+    form.append('file', blob, 'serve-test.jpg');
+
+    const uploadRes = await request('/api/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    const { url } = await uploadRes.json();
+    const filename = url.replace(/^\/uploads\//, '');
+    expect(existsSync(join(getUploadsDir(dataDir), filename))).toBe(true);
+
+    const fileRes = await request(url);
+    expect(fileRes.status).toBe(200);
+    expect(fileRes.headers.get('content-type')).toContain('image/jpeg');
   });
 });

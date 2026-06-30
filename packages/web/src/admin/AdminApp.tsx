@@ -19,6 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { fetchContent, login, saveContent, uploadFile, getToken, setToken } from '../lib/api';
+import { AdminButton } from './AdminButton';
 
 type Tab = 'dashboard' | 'chicas' | 'servicios' | 'home' | 'contacto';
 
@@ -102,6 +103,8 @@ export default function AdminApp() {
   const [selectedChicaId, setSelectedChicaId] = useState<string | null>(null);
   const [selectedServicioId, setSelectedServicioId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
   const [message, setMessage] = useState('');
 
   const sensors = useSensors(
@@ -125,12 +128,31 @@ export default function AdminApp() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoggingIn(true);
+    setLoginError('');
     try {
       const t = await login(password);
       setTokenState(t);
-      setLoginError('');
     } catch {
       setLoginError('Contraseña incorrecta');
+    } finally {
+      setLoggingIn(false);
+    }
+  };
+
+  const handleUpload = async (file: File, applyUrl: (url: string) => Content) => {
+    if (!token || !content) return;
+    setUploading(true);
+    setMessage('');
+    try {
+      const url = await uploadFile(file, token);
+      await persist(applyUrl(url));
+      setMessage('Imagen subida ✓');
+      setTimeout(() => setMessage(''), 2000);
+    } catch {
+      setMessage('Error al subir imagen');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -182,9 +204,9 @@ export default function AdminApp() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {loginError && <p className="text-red-400 text-sm mb-4">{loginError}</p>}
-          <button type="submit" className="w-full py-3 bg-gold text-bg font-semibold text-sm tracking-widest uppercase">
+          <AdminButton type="submit" loading={loggingIn} className="w-full py-3">
             Entrar
-          </button>
+          </AdminButton>
         </form>
       </div>
     );
@@ -361,17 +383,21 @@ export default function AdminApp() {
                   <input
                     type="file"
                     accept="image/*"
-                    className="mt-2 text-sm"
+                    className="mt-2 text-sm disabled:opacity-50"
+                    disabled={uploading || saving}
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (!file || !token) return;
-                      const url = await uploadFile(file, token);
-                      const updated = content.chicas.map((c) =>
-                        c.id === selectedChica.id ? { ...c, fotos: [...c.fotos, url] } : c,
-                      );
-                      persist({ ...content, chicas: updated });
+                      if (!file || !selectedChica) return;
+                      e.target.value = '';
+                      await handleUpload(file, (url) => ({
+                        ...content,
+                        chicas: content.chicas.map((c) =>
+                          c.id === selectedChica.id ? { ...c, fotos: [...c.fotos, url] } : c,
+                        ),
+                      }));
                     }}
                   />
+                  {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div>
                   <label className="text-xs text-gold uppercase tracking-widest">Servicios</label>
@@ -456,13 +482,9 @@ export default function AdminApp() {
                   </div>
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <button
-                    type="button"
-                    className="flex-1 py-2 bg-gold text-bg text-xs font-semibold tracking-widest uppercase"
-                    onClick={() => persist(content)}
-                  >
+                  <AdminButton loading={saving} className="flex-1" onClick={() => persist(content)}>
                     Guardar
-                  </button>
+                  </AdminButton>
                   <a
                     href={`/chicas/${selectedChica.slug}`}
                     target="_blank"
@@ -471,9 +493,9 @@ export default function AdminApp() {
                   >
                     Vista previa
                   </a>
-                  <button
-                    type="button"
-                    className="px-4 py-2 border border-red-500 text-red-400 text-xs"
+                  <AdminButton
+                    variant="danger"
+                    loading={saving}
                     onClick={() => {
                       if (!confirm('¿Eliminar esta chica?')) return;
                       persist({ ...content, chicas: content.chicas.filter((c) => c.id !== selectedChica.id) });
@@ -481,7 +503,7 @@ export default function AdminApp() {
                     }}
                   >
                     Eliminar
-                  </button>
+                  </AdminButton>
                 </div>
               </div>
             )}
@@ -587,23 +609,29 @@ export default function AdminApp() {
                   <input
                     type="file"
                     accept="image/*"
-                    className="mt-2 text-sm"
+                    className="mt-2 text-sm disabled:opacity-50"
+                    disabled={uploading || saving}
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      if (!file || !token) return;
-                      const url = await uploadFile(file, token);
-                      const updated = content.servicios.map((s) => (s.id === selectedServicio.id ? { ...s, imagen: url } : s));
-                      persist({ ...content, servicios: updated });
+                      if (!file || !selectedServicio) return;
+                      e.target.value = '';
+                      await handleUpload(file, (url) => ({
+                        ...content,
+                        servicios: content.servicios.map((s) =>
+                          s.id === selectedServicio.id ? { ...s, imagen: url } : s,
+                        ),
+                      }));
                     }}
                   />
+                  {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div className="flex gap-2">
-                  <button type="button" className="flex-1 py-2 bg-gold text-bg text-xs font-semibold uppercase" onClick={() => persist(content)}>
+                  <AdminButton loading={saving} className="flex-1" onClick={() => persist(content)}>
                     Guardar
-                  </button>
-                  <button
-                    type="button"
-                    className="px-4 py-2 border border-red-500 text-red-400 text-xs"
+                  </AdminButton>
+                  <AdminButton
+                    variant="danger"
+                    loading={saving}
                     onClick={() => {
                       if (!confirm('¿Eliminar servicio?')) return;
                       persist({ ...content, servicios: content.servicios.filter((s) => s.id !== selectedServicio.id) });
@@ -611,7 +639,7 @@ export default function AdminApp() {
                     }}
                   >
                     Eliminar
-                  </button>
+                  </AdminButton>
                 </div>
               </div>
             )}
@@ -636,18 +664,23 @@ export default function AdminApp() {
               <input
                 type="file"
                 accept="image/*"
-                className="mt-2 text-sm"
+                className="mt-2 text-sm disabled:opacity-50"
+                disabled={uploading || saving}
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (!file || !token) return;
-                  const url = await uploadFile(file, token);
-                  persist({ ...content, home: { ...content.home, hero: { ...content.home.hero, imagen: url } } });
+                  if (!file) return;
+                  e.target.value = '';
+                  await handleUpload(file, (url) => ({
+                    ...content,
+                    home: { ...content.home, hero: { ...content.home.hero, imagen: url } },
+                  }));
                 }}
               />
+              {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
             </div>
-            <button type="button" className="w-full py-2 bg-gold text-bg text-xs font-semibold uppercase" onClick={() => persist(content)}>
+            <AdminButton loading={saving} className="w-full" onClick={() => persist(content)}>
               Guardar home
-            </button>
+            </AdminButton>
           </div>
         )}
 
@@ -705,9 +738,9 @@ export default function AdminApp() {
                 onChange={(e) => setContent({ ...content, contacto: { ...content.contacto, instagram: e.target.value } })}
               />
             </div>
-            <button type="button" className="w-full py-2 bg-gold text-bg text-xs font-semibold uppercase" onClick={() => persist(content)}>
+            <AdminButton loading={saving} className="w-full" onClick={() => persist(content)}>
               Guardar contacto
-            </button>
+            </AdminButton>
           </div>
         )}
       </main>
