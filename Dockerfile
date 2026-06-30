@@ -1,7 +1,13 @@
-# Build stage
-FROM node:22-alpine AS builder
+# quenns-build-node-22.13 — cambiar este comentario invalida caché de Docker
+ARG NODE_IMAGE=node:22.13.1-alpine3.21
 
-RUN corepack enable
+# Build stage
+FROM ${NODE_IMAGE} AS builder
+
+ARG GIT_SHA=dev
+RUN echo "Build GIT_SHA=${GIT_SHA}" && node --version
+
+RUN corepack enable && corepack prepare pnpm@10.12.1 --activate
 
 WORKDIR /app
 
@@ -17,14 +23,14 @@ COPY packages/api ./packages/api
 COPY packages/web ./packages/web
 COPY data ./data
 
-RUN pnpm --filter @quenns/shared build
-RUN pnpm --filter @quenns/web build
-RUN pnpm --filter @quenns/api build
+RUN node --version && pnpm --filter @quenns/shared build
+RUN node --version && pnpm --filter @quenns/web build
+RUN node --version && pnpm --filter @quenns/api build
 
 RUN cp -r packages/web/dist packages/api/web-dist
 
 # Production stage
-FROM node:22-alpine AS runner
+FROM ${NODE_IMAGE} AS runner
 
 WORKDIR /app
 
