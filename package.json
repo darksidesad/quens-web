@@ -1,0 +1,14 @@
+{
+  "name": "quenns",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "test": "pnpm -r run test",
+    "build": "pnpm --filter @quenns/shared build && pnpm --filter @quenns/web build && pnpm --filter @quenns/api build && node scripts/copy-web-dist.mjs",
+    "dev": "concurrently \"pnpm --filter @quenns/api dev\" \"pnpm --filter @quenns/web dev\"",
+    "lint": "pnpm test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

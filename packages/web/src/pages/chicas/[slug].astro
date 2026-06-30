@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ChicaProfilePage from '../../components/ChicaProfilePage';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export function getStaticPaths() {
+  try {
+    const dataPath = join(process.cwd(), '../../data/content.json');
+    const content = JSON.parse(readFileSync(dataPath, 'utf-8'));
+    return content.chicas.map((c: { slug: string }) => ({
+      params: { slug: c.slug },
+    }));
+  } catch {
+    return [{ params: { slug: 'sofia' } }, { params: { slug: 'valentina' } }];
+  }
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout title={`Quenns Spa | ${slug}`}>
+  <ChicaProfilePage slug={slug!} client:load />
+</BaseLayout>

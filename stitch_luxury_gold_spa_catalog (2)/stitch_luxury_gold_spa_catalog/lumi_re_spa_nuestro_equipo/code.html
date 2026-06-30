@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuestro Equipo de Expertas | ÉLÉVATION SPA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Montserrat:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#d0c5af",
+                    "inverse-primary": "#735c00",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-tertiary-container": "#454545",
+                    "surface-container-highest": "#38342b",
+                    "surface-dim": "#16130b",
+                    "on-secondary-container": "#b7b5b4",
+                    "secondary-container": "#474746",
+                    "surface-bright": "#3d392f",
+                    "secondary": "#c8c6c5",
+                    "surface-container-lowest": "#110e07",
+                    "on-error-container": "#ffdad6",
+                    "inverse-surface": "#eae1d4",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "surface-variant": "#38342b",
+                    "primary": "#f2ca50",
+                    "primary-fixed-dim": "#e9c349",
+                    "on-secondary-fixed-variant": "#474746",
+                    "outline": "#99907c",
+                    "on-secondary": "#313030",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "on-primary-fixed-variant": "#574500",
+                    "on-background": "#eae1d4",
+                    "surface": "#16130b",
+                    "tertiary-fixed": "#e2e2e2",
+                    "background": "#16130b",
+                    "on-surface": "#eae1d4",
+                    "surface-container": "#231f17",
+                    "secondary-fixed": "#e5e2e1",
+                    "primary-fixed": "#ffe088",
+                    "on-primary-container": "#554300",
+                    "surface-container-high": "#2d2a21",
+                    "on-error": "#690005",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-tertiary": "#303030",
+                    "on-primary": "#3c2f00",
+                    "surface-container-low": "#1f1b13",
+                    "tertiary": "#cecece",
+                    "surface-tint": "#e9c349",
+                    "outline-variant": "#4d4635",
+                    "on-primary-fixed": "#241a00",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#b3b3b3",
+                    "primary-container": "#d4af37",
+                    "inverse-on-surface": "#343027",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#1c1b1b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "section-padding-desktop": "120px",
+                    "unit": "8px",
+                    "section-padding-mobile": "64px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "body-lg": ["Montserrat"],
+                    "headline-sm": ["Playfair Display"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "label-caps": ["Montserrat"],
+                    "body-md": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.2em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            color: #f2ca50;
+        }
+        .liquid-gold-divider {
+            height: 1px;
+            background: radial-gradient(circle, #C5B358 0%, rgba(197, 179, 88, 0) 70%);
+            width: 100%;
+        }
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(242, 202, 80, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.6s;
+            opacity: 0;
+        }
+        .shimmer-btn:hover::after {
+            opacity: 1;
+            left: 100%;
+            top: 100%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 selection:text-primary">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-primary/20">
+<nav class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
+<div class="font-headline-md text-headline-md text-primary tracking-widest uppercase">ÉLÉVATION SPA</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Services</a>
+<a class="font-label-caps text-label-caps text-primary border-b border-primary pb-1" href="#">Therapists</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Wellness</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Boutique</a>
+</div>
+<button class="font-label-caps text-label-caps bg-primary text-on-primary px-6 py-2 tracking-widest shimmer-btn transition-all duration-300">RESERVE</button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[70vh] flex items-center justify-center pt-32 overflow-hidden">
+
+<div class="relative z-10 text-center px-gutter max-w-3xl mx-auto">
+<h1 class="font-display-lg text-display-lg text-primary mb-6 md:block hidden">Maestras del Bienestar</h1>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary mb-4 md:hidden">Maestras del Bienestar</h1>
+<div class="liquid-gold-divider mx-auto mb-8 w-48"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    En Lumière Spa, nuestro equipo está conformado por expertas dedicadas a la maestría del tacto y la serenidad profunda. Cada terapeuta ha sido seleccionada por su excepcional técnica y su compromiso inquebrantable con el bienestar holístico.
+                </p>
+</div>
+</section>
+<!-- Team Grid -->
+<section class="py-section-padding-desktop px-gutter max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Therapist 1 -->
+<div class="group relative bg-surface-container border border-primary/10 transition-all duration-500 hover:border-primary/40">
+<div class="aspect-[3/4] overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb9Mn-dzZNh2ldTaBbeKiklhiieSn2IFRbOKIxvGAKz5uqGzH5eBjlb17v4Pjrp8QpUAnV9zfnPziA5Aa2X3cqLMhgzVZFUpeULLHgLRtw_YBD2emRJCoYSnc7URZ1i7m0daRMPBIRsBfhgAjGoEkCnytIPJtDxS07Bc6px-6MgS3NGqiWB2bpx5FO9vY10X0kfvh3likqLGm8Mp-3YWn4qsqoaRvOjK5KoEEPa1U9i4fzsgIykUWD"/>
+</div>
+<div class="p-6 bg-surface-container-high border-t border-primary/20">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">Elena Vance</h3>
+<p class="font-label-caps text-[10px] tracking-widest text-on-surface-variant mb-4 uppercase">Terapeuta Senior</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2 mb-6">Especialista en drenaje linfático y técnicas de rejuvenecimiento facial con más de 12 años de experiencia.</p>
+<button class="w-full py-2 border border-primary/50 text-primary font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all duration-300 shimmer-btn uppercase">Ver Perfil</button>
+</div>
+</div>
+<!-- Therapist 2 -->
+<div class="group relative bg-surface-container border border-primary/10 transition-all duration-500 hover:border-primary/40">
+<div class="aspect-[3/4] overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmg-ACSuqydYLf6ybEnHkdj8m7gUKYDDqy-dRUXqaFIvEAcLDFrzGy4jY6ji_OUlSgx4Evh4GYUG0kxjexv9tb27UV71VDLSRloQSpBdprYKi2Jw3jKqIPzUbr2PFE0Vd2PVJk5TlyefLNAbuIYQVaFW6L-AVhek3uWZrCxg3W09coVMmDJ1JpP71Pwj09Zms-87FoYXmzFs4ZvAjxuxDjAngplZq9CrbQOUf1IMR-el9Sb61QG1aH"/>
+</div>
+<div class="p-6 bg-surface-container-high border-t border-primary/20">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">Sofia Ortega</h3>
+<p class="font-label-caps text-[10px] tracking-widest text-on-surface-variant mb-4 uppercase">Experta en Masajes Holísticos</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2 mb-6">Maestra en aromaterapia y piedras volcánicas, enfocada en el equilibrio energético y la calma mental.</p>
+<button class="w-full py-2 border border-primary/50 text-primary font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all duration-300 shimmer-btn uppercase">Ver Perfil</button>
+</div>
+</div>
+<!-- Therapist 3 -->
+<div class="group relative bg-surface-container border border-primary/10 transition-all duration-500 hover:border-primary/40">
+<div class="aspect-[3/4] overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC63ClNNs4IXtQ35zPvQvRpkUU5isZIpLAwTvS7QkgSOQrGWCXm5xTM00H3ochVrdC5_XYz0vfq4k0k7YL88h1ls24XmBIfqoBCdorCYHjyz3AOoPTDuCwdsK48EwTgFgyHAEqK-RAYHOT79B7JLkPystyLJlCLePg8fYQWgZaQ9zltYcGCbY_EjWKC8lNiQ0dFIHeTO2XvEAAkcXvBhp1goIhGQZ0hL9ETsZM43kjMQ-AZMQZwqbjp"/>
+</div>
+<div class="p-6 bg-surface-container-high border-t border-primary/20">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">Isabella Rossi</h3>
+<p class="font-label-caps text-[10px] tracking-widest text-on-surface-variant mb-4 uppercase">Especialista en Spa</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2 mb-6">Experta en rituales de baño y exfoliaciones de seda que revitalizan la textura y el brillo natural de la piel.</p>
+<button class="w-full py-2 border border-primary/50 text-primary font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all duration-300 shimmer-btn uppercase">Ver Perfil</button>
+</div>
+</div>
+<!-- Therapist 4 -->
+<div class="group relative bg-surface-container border border-primary/10 transition-all duration-500 hover:border-primary/40">
+<div class="aspect-[3/4] overflow-hidden">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDogroaLo68-yOJiQkVa3f97RggbHco69yhJuUVxEklg4AMy0l9d0QGm4lco_8yPhmbxGre9MR0w7SIh4TKUdoKt6kcsVmp1J5wRQBY-BhryVm6t9L9gooT1a9QiE3rszCPHOoegqc4eLX529BbtDGdjHl96VkBBiWcoAUq9_b78jHBwbc9Jsrk2EbsKZdYGyZfyOvy3YIYHKYmSJib0Kj2y9KXZICthbmMqmi2Ag7cZthdhD5vBsvw"/>
+</div>
+<div class="p-6 bg-surface-container-high border-t border-primary/20">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">Clara Méndez</h3>
+<p class="font-label-caps text-[10px] tracking-widest text-on-surface-variant mb-4 uppercase">Terapeuta de Sueño</p>
+<p class="font-body-md text-on-surface-variant line-clamp-2 mb-6">Dedicada a técnicas de relajación profunda diseñadas para combatir el insomnio y el estrés crónico.</p>
+<button class="w-full py-2 border border-primary/50 text-primary font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all duration-300 shimmer-btn uppercase">Ver Perfil</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Values Section -->
+<section class="py-section-padding-desktop bg-surface-container-low border-y border-primary/10">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
+<div class="flex flex-col items-center gap-4 group">
+<div class="w-16 h-16 flex items-center justify-center rounded-full border border-primary/30 group-hover:bg-primary/10 transition-all duration-500">
+<span class="material-symbols-outlined text-4xl" data-icon="workspace_premium">workspace_premium</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary uppercase tracking-widest">Profesionalismo</h4>
+<p class="font-body-md text-on-surface-variant max-w-xs">Nuestras terapeutas cuentan con certificaciones internacionales y una formación continua en las técnicas más avanzadas del mundo.</p>
+</div>
+<div class="flex flex-col items-center gap-4 group">
+<div class="w-16 h-16 flex items-center justify-center rounded-full border border-primary/30 group-hover:bg-primary/10 transition-all duration-500">
+<span class="material-symbols-outlined text-4xl" data-icon="diamond">diamond</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary uppercase tracking-widest">Exclusividad</h4>
+<p class="font-body-md text-on-surface-variant max-w-xs">Cada encuentro está diseñado como una experiencia única y privada, asegurando discreción absoluta y atención de guante blanco.</p>
+</div>
+<div class="flex flex-col items-center gap-4 group">
+<div class="w-16 h-16 flex items-center justify-center rounded-full border border-primary/30 group-hover:bg-primary/10 transition-all duration-500">
+<span class="material-symbols-outlined text-4xl" data-icon="person_celebrate">person_celebrate</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary uppercase tracking-widest">Atención Personalizada</h4>
+<p class="font-body-md text-on-surface-variant max-w-xs">Escuchamos su cuerpo y su mente para adaptar cada tratamiento a sus necesidades específicas del momento.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-section-padding-desktop pb-unit bg-surface border-t border-primary/20">
+<div class="flex flex-col items-center gap-unit w-full max-w-container-max mx-auto px-gutter text-center">
+<div class="font-headline-sm text-headline-sm text-primary tracking-widest uppercase mb-4">ÉLÉVATION SPA</div>
+<div class="flex gap-8 mb-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase" href="#">Contact</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 uppercase" href="#">Press</a>
+</div>
+<div class="liquid-gold-divider max-w-sm mb-6 opacity-30"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant opacity-60">© 2024 ÉLÉVATION SPA. UNCOMPROMISING INDULGENCE.</p>
+</div>
+</footer>
+<script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Atmospheric parallax effect for images on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.group img');
+            const x = (e.clientX / window.innerWidth - 0.5) * 15;
+            const y = (e.clientY / window.innerHeight - 0.5) * 15;
+            
+            cards.forEach(img => {
+                if(img.parentElement.parentElement.matches(':hover')) {
+                    img.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+                }
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html><html class="dark" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMIÈRE SPA | Tu Momento de Lujo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#38342b",
+                    "on-secondary-fixed-variant": "#474746",
+                    "on-secondary-container": "#b7b5b4",
+                    "on-surface-variant": "#d0c5af",
+                    "primary-fixed-dim": "#e9c349",
+                    "tertiary-container": "#b3b3b3",
+                    "surface-tint": "#e9c349",
+                    "on-primary": "#3c2f00",
+                    "surface-container-high": "#2d2a21",
+                    "on-tertiary": "#303030",
+                    "on-surface": "#eae1d4",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-secondary": "#313030",
+                    "surface-container-highest": "#38342b",
+                    "on-error": "#690005",
+                    "error": "#ffb4ab",
+                    "inverse-surface": "#eae1d4",
+                    "surface-bright": "#3d392f",
+                    "surface-container": "#231f17",
+                    "primary-container": "#d4af37",
+                    "tertiary": "#cecece",
+                    "background": "#16130b",
+                    "surface": "#16130b",
+                    "primary": "#f2ca50",
+                    "surface-dim": "#16130b",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-error-container": "#ffdad6",
+                    "outline-variant": "#4d4635",
+                    "on-primary-container": "#554300",
+                    "on-background": "#eae1d4",
+                    "outline": "#99907c",
+                    "secondary": "#c8c6c5",
+                    "inverse-primary": "#735c00",
+                    "primary-fixed": "#ffe088",
+                    "on-primary-fixed": "#241a00",
+                    "on-primary-fixed-variant": "#574500",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "on-tertiary-container": "#454545",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "inverse-on-surface": "#343027",
+                    "surface-container-lowest": "#110e07",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "error-container": "#93000a",
+                    "secondary-container": "#474746",
+                    "surface-container-low": "#1f1b13"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "section-padding-mobile": "64px",
+                    "container-max": "1280px",
+                    "section-padding-desktop": "120px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Playfair Display"],
+                    "label-caps": ["Montserrat"],
+                    "headline-sm": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "body-lg": ["Montserrat"],
+                    "body-md": ["Montserrat"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.2em", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #16130b; color: #eae1d4; overflow-x: hidden; }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .gold-divider {
+            height: 1px;
+            width: 100%;
+            background: radial-gradient(circle, rgba(212,175,55,0.6) 0%, rgba(212,175,55,0) 70%);
+        }
+
+        .liquid-gold-hover {
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-gold-hover::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent);
+            transition: 0.5s;
+        }
+        .liquid-gold-hover:hover::after {
+            left: 100%;
+        }
+
+        .masonry {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-rows: 200px;
+            gap: 16px;
+        }
+        .masonry-item-large { grid-row: span 2; }
+        .masonry-item-wide { grid-column: span 2; }
+
+        .form-input-focus {
+            border-bottom: 1px solid rgba(212,175,55,0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-input-focus:focus {
+            border-bottom: 1px solid #f2ca50;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="font-body-md selection:bg-primary/30">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-primary/20">
+<div class="flex justify-between items-center px-gutter py-4 max-w-container-max mx-auto">
+<span class="font-display-lg text-headline-sm tracking-widest text-primary">LUMIÈRE SPA</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-caps text-label-caps text-on-surface hover:text-primary transition-colors duration-300" href="#servicios">Servicios</a>
+<a class="font-label-caps text-label-caps text-on-surface hover:text-primary transition-colors duration-300" href="#galeria">Galería</a>
+<a class="font-label-caps text-label-caps text-on-surface hover:text-primary transition-colors duration-300" href="#paquetes">Paquetes</a>
+<a class="font-label-caps text-label-caps text-on-surface hover:text-primary transition-colors duration-300" href="#testimonios">Testimonios</a>
+<a class="font-label-caps text-label-caps text-on-surface hover:text-primary transition-colors duration-300" href="#contacto">Contacto</a>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-none font-label-caps text-label-caps hover:scale-105 transition-transform active:scale-95 duration-300">
+                    Reservar Cita
+                </button>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center scale-105 animate-pulse-slow" data-alt="A cinematic, ultra-high-definition photograph of a luxury spa environment. Soft golden candlelight flickers near a serene indoor pool with floating lotus flowers. The atmosphere is nocturnal and exclusive, with deep charcoal stone walls and mist rising from the water. Muted gold accents and high-end textures create a sense of absolute prestige and calm. The lighting is low-key and sophisticated." style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBC2lWLmOXC4Uo_sfDvcsX0N4t_md8WtmZhNn2sVcMwU6Vuk0qczgYDhy_iPsZHgpeut58VoPHydWhGoi8PnsWSXjQ6IR4eoAt1RLPd42Hlg4eDQATP1iQrgRE-BQjfdt2g0HfCN8LXJ3KGRaTh0Gvo3yGybbJzHYBwdPYvMWaYTinakoWm0JWryddK7kpIVNneyPLXA05TjCLa2RXo0nPc9kZvIzBKBII-_yftaqZ6rYQ5H-izPGQF&quot;);"></div>
+<div class="absolute inset-0 bg-black/60 backdrop-brightness-75"></div>
+</div>
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full opacity-40 z-10 pointer-events-none" -->
+<div class="absolute inset-0 w-full h-full opacity-40 z-10 pointer-events-none" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%" width="1280" height="1024"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec3 color = vec3(0.0);
+    
+    // Base black background
+    color = vec3(0.01, 0.01, 0.01);
+    
+    // Golden sparkles/dust effect
+    for(float i = 0.0; i < 20.0; i++) {
+        float size = mix(0.001, 0.003, fract(sin(i * 123.456) * 456.789));
+        vec2 pos = vec2(
+            fract(sin(i * 456.789 + u_time * 0.05) * 789.123),
+            fract(cos(i * 123.456 + u_time * 0.03) * 456.789)
+        );
+        
+        float dist = length(uv - pos);
+        float sparkle = smoothstep(size, 0.0, dist);
+        
+        // Golden hue
+        vec3 gold = vec3(0.83, 0.68, 0.21); // #D4AF37
+        color += gold * sparkle * (0.5 + 0.5 * sin(u_time + i));
+    }
+
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="relative z-20 text-center px-gutter max-w-4xl mx-auto">
+<h1 class="font-display-lg text-display-lg text-primary mb-6 drop-shadow-2xl">QUEENS</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12 tracking-wide">Descubre la armonía perfecta entre cuerpo y mente en un refugio diseñado exclusivamente para tus sentidos.</p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<a class="bg-primary px-10 py-4 font-label-caps text-label-caps text-on-primary hover:bg-primary-fixed-dim transition-all duration-500 shadow-[0_0_20px_rgba(242,202,80,0.3)]" href="#servicios">
+                    Ver Servicios
+                </a>
+<a class="border border-primary text-primary px-10 py-4 font-label-caps text-label-caps hover:bg-primary/10 transition-all duration-500" href="#contacto">
+                    Contáctanos
+                </a>
+</div>
+</div>
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-primary/50">
+<span class="material-symbols-outlined text-4xl">keyboard_double_arrow_down</span>
+</div>
+</header>
+<!-- Catalog Section -->
+<section class="py-section-padding-desktop px-gutter max-w-container-max mx-auto bg-surface" id="servicios">
+<div class="text-center mb-24">
+<span class="font-label-caps text-label-caps text-primary tracking-[0.4em] block mb-4">NUESTRA SELECCIÓN</span>
+<h2 class="font-display-lg text-headline-md text-on-surface">Servicios Exclusivos</h2>
+<div class="gold-divider mt-8 mx-auto w-32"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<!-- Service Card 1 -->
+<div class="group relative bg-surface-container border border-outline-variant/30 overflow-hidden transition-all duration-500 hover:border-primary/50">
+<div class="h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close-up of a professional hot stone massage therapy. Smooth, black basalt stones are placed on a person's back in a serene, dark-lit luxury spa room. Warm golden oil glistens on the skin. The mood is tranquil and indulgent, emphasizing premium wellness and high-end relaxation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGCmX61TOVmnC505cDwwuUQPMOEU_qGhzh9B86u5s8VC-GGHiitq9Rnn81TP9cfFDM8idobJXxfyubCJ6xxTAyHDsY8AQKYDQWlfLbEz8ByHoT0STlk6YFi1e5qSAzDIrCMD9QKLj8W2t2KVT5KsOs8bHFF3XNwxt4e9lUU3trZK2rW7uAUJHYi-d9-JYQt5kO82rT74y82O5SZpOXlfcxRRTQ4iH994-e3ZGn2gsyaL_tn5LKqxAS">
+</div>
+<div class="p-8">
+<h3 class="font-display-lg text-headline-sm text-primary mb-4">Masajes Holísticos</h3>
+<p class="text-on-surface-variant font-body-md mb-6">Técnicas ancestrales combinadas con aceites esenciales premium para una relajación profunda.</p>
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-primary text-lg">$1,200 MXN</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</div>
+</div>
+</div>
+<!-- Service Card 2 -->
+<div class="group relative bg-surface-container border border-outline-variant/30 overflow-hidden transition-all duration-500 hover:border-primary/50">
+<div class="h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="High-end facial treatment in a luxury spa. A therapist is applying a golden gel mask to a client's face. The lighting is soft and focused, highlighting the glow and premium quality of the skincare products. Sophisticated black and gold setting with minimalist tools." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyJePWDHms4ySBtYKCtS93AoWMCRoh94xbHtdFZJSzybqERphND-9S8wRYbHCLD3V-RCW_964WBhyJGGpRPU_ZYODk6KRozhtEc0dg6LbXqFThfap-kz1MDjlYIqbuIx4OZzM3MWvyCDVHbK4lvqc4TL6cGalOqM4Xoki1JhCnecpn_tmVxEqBaqVJruilDeVm9vo7xbwZkIZxtxLKvt3Bcv5EupNWgaMtHZ6qQLUt_fP8oiowtzZb">
+</div>
+<div class="p-8">
+<h3 class="font-display-lg text-headline-sm text-primary mb-4">Faciales Rejuvenecedores</h3>
+<p class="text-on-surface-variant font-body-md mb-6">Tratamientos con partículas de oro y activos botánicos para devolver el brillo natural a tu piel.</p>
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-primary text-lg">$950 MXN</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</div>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="group relative bg-surface-container border border-outline-variant/30 overflow-hidden transition-all duration-500 hover:border-primary/50">
+<div class="h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Elegant manicure session in a luxury lounge. Close up of hands being treated with high-end tools. Soft lighting, gold accents on the table, and minimalist decor. High-gloss nail polish bottles are visible in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATkP4k7mK1oAaKJUchnb1vi8xZdLbiP40lbpXqHI-PRhQbAI-0NsmGN3e7uiIToNskbZ5s_I6r0YfDaUEB2eoyKtpg5JEnPi2tyNjx2VUKGu2qgB00oSxlGpaHVcf_5SLdMqUvyePagvW0BJXCUXUMNORMKLm10rf5Tvsnt9MXXCFWib3JkrQTQgfw8CdWprmcl4JBJm5DUqUOnrnKZnLGMNoNlQrvjabjQWglp1OOrUu5fKqYE6Jg">
+</div>
+<div class="p-8">
+<h3 class="font-display-lg text-headline-sm text-primary mb-4">Manicure &amp; Pedicure</h3>
+<p class="text-on-surface-variant font-body-md mb-6">Cuidado experto para manos y pies, incluyendo exfoliación con sales del Himalaya y esmaltado premium.</p>
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-primary text-lg">$650 MXN</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</div>
+</div>
+</div>
+<!-- Service Card 4 -->
+
+<!-- Service Card 5 -->
+
+<!-- View More Card -->
+
+</div>
+</section>
+<!-- Gallery Section -->
+<section class="py-section-padding-desktop bg-surface-container-lowest" id="galeria">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="flex justify-between items-end mb-16">
+<div>
+<span class="font-label-caps text-label-caps text-primary tracking-[0.4em] block mb-4">INSTALACIONES</span>
+<h2 class="font-display-lg text-headline-md text-on-surface">El Arte del Espacio</h2>
+</div>
+<a class="font-label-caps text-label-caps text-primary border-b border-primary pb-1 hidden md:block" href="#">VER GALERÍA COMPLETA</a>
+</div>
+<div class="masonry">
+<div class="masonry-item-large overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Luxury spa reception area with minimalist black marble desk and gold logo. Soft atmospheric lighting and vertical garden element. Elite interior design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRgOeDOwx7hCiNV6emQAwBWy8TMmLct9oPB7F8fkz_uGgGR8U6wizExj5qFv2OwEEGXQi91ZZFO8BqwYP0ofDHjTVtJ6vvwljh8sSmXbD07MBwH04mhmsVbQBaiskgsEgSOMAR4DFkB1RTmrY3yCLSVv9rwrzf2uqllOHpXGb8GImiBnbKYhUGBIgakGlWIRKfNtkq2Dj4U8UM3pyzi8gvtKEKl6NODLHLjXDTlZZWJc6LVbET2vya">
+</div>
+<div class="overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Close up of essential oil bottles and white flowers on a dark tray. Luxury spa details. Macro photography with soft focus background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCldHGUUhF3Q0g8nY20xh21h5L8BDXAm4ydCAtOSLI2Q_Jcd-lGFd_bUHni66_gD33mo9QQIhEWF6oMtyM71f3nDkDJxZQz2UZDCUx3Uw3Sc1fgEBEmiTkDe2IYVY8DjxtjdW86Lf3nj-KRdVdty__lF-HiQmnOyf6SCak0IYblvXiijOgzJCePwQA2NMTH1LL6ynPOPdq2sI7p9F3XV2rEHfp1Mw4BfgOz2CMCcSvPvKOzKdQJTfCX">
+</div>
+<div class="masonry-item-wide overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="A wide shot of a luxury spa relaxation lounge with velvet chaises and golden floor lamps. Panorama of a peaceful high-end environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrTvw7wflyrlaKakZnrZLOf9mzWie3YG5PMu1h7PrwuJ2fcSPY0HHWzm0QYkYiA6WgTHnuvQxqzBPkxSsicOrjd6qB57Xbv0i_pupF36-klhywqvldWEouf93Ek3g-cXCfVN7_8ChHKZGtrRoyTnUCCLwPUJkium_5NrupPKQX-Gbp57iiuVPXYmXLFk62uU-dUU48f-BRPEQr9Lt6oF9rwzNzVYmrYghp2FTjE8n-hgUBQovcnfAP">
+</div>
+<div class="overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="Details of a golden shower head and high-end marble bathroom fixtures. Minimalist and opulent textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtRox9RBRkmcjFPp5GGuSHWiul5jAsvhsynh2CXofRX7u8K445q0FhnLGJv300wUFIidoBTeWn6fU9R9euHL-D_CYZo47dIlNrgqpx2a9OLdxr7btx7042f7lcR0NZUfmAyL0oDt42-Q3LGHepRZOfCBbBGABOKEPKzGnHh1hDWo2ijV0E5cbP6P3xclc0NduD0bzPsadC-w8XeDPWD7XELiOFFidlOcs4pUKI78JtwvHZr7DllCes">
+</div>
+<div class="masonry-item-large overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="An outdoor infinity pool overlooking a sunset. Luxury resort spa setting with golden hour light reflecting on the water." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhoDF5FyuBfpYRr0HaLap6_ex-67CXnI8WcWQyJZMmHg75RKXjBCTCSxNuVk-D1-va3O0cLITLAlQob5RAESJdZdynRMSmLKw9CyyqFQ9Dpz24vk8_KeIaGdt8hBR-hFLGRpOEm_-GqgWHjNKPhtn2-jO3YzDEsMqARmKOMITBMtNha6TZrNEFglQQihEHssFVYK7-kal0_4YKuw4_nqw1O6C4-i-mDJIgfe-Qmo9rT_kZ_uyDZIYf">
+</div>
+<div class="overflow-hidden">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" data-alt="A minimalist treatment room with one massage table, soft linens, and a single candle. Zen aesthetic, dark noir style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKVDqxZyhWuKNU_QBZOMmlGRUEU4Y_MZqbhg6k5VBTXkt5GRLzW8eFBTQU2tP1fvZALfy5st9vRxFXMi67oQEZ_oWfliR27FF8cMs0TMgBwB2uvqaof6TNtOZgEqv2IjPERn-aQap6E5tVu9uUKWIQEEQ-lgFURXA_n2WEfU2GwFxtBWvR31qdKp4ypCaXiwPSyyhTpSnj_QTs0DX4MjAVOrVHn7Oqzcyk1X2qFL_ozqVfoOzum-ns">
+</div>
+</div>
+</div>
+</section>
+<!-- Packages Section -->
+<section class="py-section-padding-desktop px-gutter bg-surface relative overflow-hidden" id="paquetes">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full opacity-10 pointer-events-none" -->
+<div class="absolute inset-0 w-full h-full opacity-10 pointer-events-none" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec3 color = vec3(0.0);
+    
+    // Base black background
+    color = vec3(0.01, 0.01, 0.01);
+    
+    // Golden sparkles/dust effect
+    for(float i = 0.0; i < 20.0; i++) {
+        float size = mix(0.001, 0.003, fract(sin(i * 123.456) * 456.789));
+        vec2 pos = vec2(
+            fract(sin(i * 456.789 + u_time * 0.05) * 789.123),
+            fract(cos(i * 123.456 + u_time * 0.03) * 456.789)
+        );
+        
+        float dist = length(uv - pos);
+        float sparkle = smoothstep(size, 0.0, dist);
+        
+        // Golden hue
+        vec3 gold = vec3(0.83, 0.68, 0.21); // #D4AF37
+        color += gold * sparkle * (0.5 + 0.5 * sin(u_time + i));
+    }
+
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="max-w-container-max mx-auto relative z-10">
+<div class="text-center mb-24">
+<span class="font-label-caps text-label-caps text-primary tracking-[0.4em] block mb-4">SUSCRIPCIONES &amp; PLANES</span>
+<h2 class="font-display-lg text-headline-md text-on-surface">Paquetes de Bienestar</h2>
+<div class="gold-divider mt-8 mx-auto w-32"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+<!-- Package 1 -->
+<div class="p-10 bg-surface-container border border-outline-variant/30 flex flex-col items-center text-center">
+<h3 class="font-display-lg text-headline-sm text-on-surface mb-2">Esencial</h3>
+<span class="font-label-caps text-primary text-2xl mb-8">$2,500 <small class="text-xs">/ MES</small></span>
+<ul class="space-y-4 mb-10 text-on-surface-variant font-body-md">
+<li class="">Acceso a Hidroterapia</li>
+<li class="">1 Masaje Sueco (60 min)</li>
+<li class="">1 Facial de Limpieza</li>
+<li class="opacity-30 line-through">Acceso VIP Lounge</li>
+</ul>
+<button class="w-full border border-primary text-primary py-4 font-label-caps text-label-caps hover:bg-primary/10 transition-all">SELECCIONAR</button>
+</div>
+<!-- Package 2: Featured -->
+<div class="p-12 bg-surface-container-highest border-2 border-primary shadow-[0_0_40px_rgba(242,202,80,0.15)] relative scale-105 z-20 flex flex-col items-center text-center">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-6 py-1 font-label-caps text-[10px]">RECOMENDADO</div>
+<h3 class="font-display-lg text-headline-md text-primary mb-2">Experiencia Lumière</h3>
+<span class="font-label-caps text-primary text-3xl mb-8">$5,800 <small class="text-xs">/ MES</small></span>
+<ul class="space-y-4 mb-10 text-on-surface font-body-md">
+<li class="">Acceso Ilimitado Spa</li>
+<li class="">2 Masajes de Firma (90 min)</li>
+<li class="">Tratamiento de Oro 24K</li>
+<li class="">Manicure &amp; Pedicure Deluxe</li>
+<li class="">Acceso VIP Lounge &amp; Bar</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-4 font-label-caps text-label-caps hover:brightness-110 transition-all">ADQUIRIR AHORA</button>
+</div>
+<!-- Package 3 -->
+<div class="p-10 bg-surface-container border border-outline-variant/30 flex flex-col items-center text-center">
+<h3 class="font-display-lg text-headline-sm text-on-surface mb-2">Ritual Dúo</h3>
+<span class="font-label-caps text-primary text-2xl mb-8">$4,200 <small class="text-xs">/ SESIÓN</small></span>
+<ul class="space-y-4 mb-10 text-on-surface-variant font-body-md">
+<li class="">Suite Privada para Parejas</li>
+<li class="">Masaje en Pareja (80 min)</li>
+<li class="">Botella de Champagne</li>
+<li class="">Baño de Pétalos de Rosa</li>
+</ul>
+<button class="w-full border border-primary text-primary py-4 font-label-caps text-label-caps hover:bg-primary/10 transition-all">SELECCIONAR</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-section-padding-desktop bg-surface-container-lowest" id="testimonios">
+<div class="max-w-4xl mx-auto px-gutter text-center">
+<span class="material-symbols-outlined text-6xl text-primary/20 mb-8" style="font-variation-settings: &quot;FILL&quot; 1;">format_quote</span>
+<div class="relative overflow-hidden h-64" id="testimonial-container">
+<div class="testimonial-slide active transition-opacity duration-1000">
+<p class="font-display-lg text-headline-sm text-on-surface mb-8 italic">"Una experiencia transformadora. El nivel de detalle y la atmósfera de paz en Lumière no tienen comparación en la ciudad."</p>
+<div class="flex justify-center gap-1 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div></div></div></div></section>
+
+</body></html>

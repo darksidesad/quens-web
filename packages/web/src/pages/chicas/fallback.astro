@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ChicaProfilePage from '../../components/ChicaProfilePage';
+
+// Fallback para chicas creadas después del build (Hono reescribe slug aquí)
+---
+
+<BaseLayout title="Quenns Spa">
+  <ChicaProfilePage slug="" client:load />
+  <script is:inline>
+    window.__QUENNS_SLUG__ = window.location.pathname.split('/').filter(Boolean).pop() || '';
+  </script>
+</BaseLayout>

@@ -1,0 +1,162 @@
+{
+  "home": {
+    "hero": {
+      "titulo": {
+        "es": "Quenns Spa",
+        "en": "Quenns Spa"
+      },
+      "subtitulo": {
+        "es": "Tu momento de lujo y bienestar",
+        "en": "Your moment of luxury and wellness"
+      },
+      "imagen": ""
+    }
+  },
+  "contacto": {
+    "whatsapp": "+573001234567",
+    "direccion": {
+      "es": "Calle 123 #45-67, Bogotá",
+      "en": "123 Street #45-67, Bogota"
+    },
+    "mapa": {
+      "lat": 4.711,
+      "lng": -74.0721
+    },
+    "horarios": {
+      "es": "Lun – Sáb: 10:00 – 20:00",
+      "en": "Mon – Sat: 10:00 AM – 8:00 PM"
+    },
+    "instagram": ""
+  },
+  "servicios": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "nombre": {
+        "es": "Masaje Relajante",
+        "en": "Relaxing Massage"
+      },
+      "descripcion": {
+        "es": "Masaje corporal completo para aliviar tensiones.",
+        "en": "Full body massage to relieve tension."
+      },
+      "precio": 120000,
+      "duracion": "60 min",
+      "imagen": "",
+      "orden": 0
+    },
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "nombre": {
+        "es": "Masaje con Piedras Calientes",
+        "en": "Hot Stone Massage"
+      },
+      "descripcion": {
+        "es": "Terapia con piedras volcánicas calientes.",
+        "en": "Therapy with heated volcanic stones."
+      },
+      "precio": 150000,
+      "duracion": "75 min",
+      "imagen": "",
+      "orden": 1
+    }
+  ],
+  "chicas": [
+    {
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "slug": "sofia",
+      "nombre": {
+        "es": "Sofía",
+        "en": "Sofia"
+      },
+      "descripcion": {
+        "es": "Especialista en masajes relajantes y aromaterapia.",
+        "en": "Specialist in relaxing massages and aromatherapy."
+      },
+      "fotos": [],
+      "servicios": [
+        "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      ],
+      "dias": [
+        "lun",
+        "mar",
+        "vie",
+        "mie"
+      ],
+      "horarios": {
+        "lun": {
+          "inicio": "10:00",
+          "fin": "18:00"
+        },
+        "mar": {
+          "inicio": "10:00",
+          "fin": "18:00"
+        },
+        "vie": {
+          "inicio": "10:00",
+          "fin": "18:00"
+        },
+        "mie": {
+          "inicio": "10:00",
+          "fin": "18:00"
+        }
+      },
+      "activa": true,
+      "orden": 0
+    },
+    {
+      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+      "slug": "valentina",
+      "nombre": {
+        "es": "Valentina",
+        "en": "Valentina"
+      },
+      "descripcion": {
+        "es": "Experta en técnicas de piedras calientes.",
+        "en": "Expert in hot stone techniques."
+      },
+      "fotos": [],
+      "servicios": [
+        "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+      ],
+      "dias": [
+        "mar",
+        "jue",
+        "sab"
+      ],
+      "horarios": {
+        "mar": {
+          "inicio": "11:00",
+          "fin": "19:00"
+        },
+        "jue": {
+          "inicio": "11:00",
+          "fin": "19:00"
+        },
+        "sab": {
+          "inicio": "10:00",
+          "fin": "16:00"
+        }
+      },
+      "activa": true,
+      "orden": 1
+    },
+    {
+      "id": "ccd8cf51-b620-43b8-a4fc-073ffd673136",
+      "slug": "nueva-1782786391354",
+      "nombre": {
+        "es": "Nueva",
+        "en": "New"
+      },
+      "descripcion": {
+        "es": "",
+        "en": ""
+      },
+      "fotos": [],
+      "servicios": [],
+      "dias": [],
+      "horarios": {},
+      "activa": true,
+      "orden": 2
+    }
+  ]
+}
