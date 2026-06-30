@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 RUN corepack enable
 
@@ -24,7 +24,7 @@ RUN pnpm --filter @quenns/api build
 RUN cp -r packages/web/dist packages/api/web-dist
 
 # Production stage
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 

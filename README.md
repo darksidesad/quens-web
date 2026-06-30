@@ -4,7 +4,7 @@ Web estática + panel admin para spa. Astro + Tailwind + Hono API.
 
 ## Requisitos
 
-- Node.js 20+
+- Node.js 22+ (Astro 7)
 - [pnpm](https://pnpm.io/) (`corepack enable` o `npm i -g pnpm`)
 
 ## Desarrollo local
