@@ -7,7 +7,7 @@ FROM ${NODE_IMAGE} AS builder
 ARG GIT_SHA=dev
 RUN echo "Build GIT_SHA=${GIT_SHA}" && node --version
 
-RUN corepack enable && corepack prepare pnpm@10.12.1 --activate
+RUN npm install -g pnpm@10.12.1 && pnpm --version
 
 WORKDIR /app
 
