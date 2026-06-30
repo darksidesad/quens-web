@@ -20,12 +20,12 @@ export function SiteBackground({ children }: Props) {
         <>
           <div
             aria-hidden
-            className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+            className="site-bg-layer pointer-events-none z-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${imageUrl(fondo)})` }}
           />
           <div
             aria-hidden
-            className="pointer-events-none fixed inset-0 z-0 bg-gradient-to-b from-bg/95 via-bg/88 to-bg/97"
+            className="site-bg-layer pointer-events-none z-0 bg-gradient-to-b from-bg/95 via-bg/88 to-bg/97"
           />
         </>
       )}

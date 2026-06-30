@@ -78,7 +78,7 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="relative max-w-6xl mx-auto px-6 py-20">
+        <section className="relative max-w-6xl mx-auto px-6 py-20 overflow-hidden">
           <span className="glow-gold left-1/4 top-0 h-72 w-72 -translate-x-1/2" aria-hidden />
           <p className="eyebrow text-center block">{lang === 'es' ? 'Experiencias' : 'Experiences'}</p>
           <h2 className="text-3xl text-center text-gold">{ui('ourServices', lang)}</h2>
@@ -110,7 +110,7 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="relative max-w-6xl mx-auto px-6 py-20">
+        <section className="relative max-w-6xl mx-auto px-6 py-20 overflow-hidden">
           <span className="glow-gold right-1/4 top-10 h-72 w-72 translate-x-1/2" aria-hidden />
           <p className="eyebrow text-center block">{lang === 'es' ? 'Nuestro equipo' : 'Our team'}</p>
           <h2 className="text-3xl text-center text-gold">{ui('meetTeam', lang)}</h2>
