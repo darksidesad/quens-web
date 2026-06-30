@@ -29,8 +29,14 @@ RUN node --version && pnpm --filter @quenns/api build
 
 RUN cp -r packages/web/dist packages/api/web-dist
 
+# Empaqueta API + @quenns/shared + deps en carpeta autocontenida (sin symlinks rotos)
+RUN pnpm --filter @quenns/api --prod deploy --legacy /deploy
+RUN cp -r packages/api/web-dist /deploy/web-dist
+
 # Production stage
 FROM ${NODE_IMAGE} AS runner
+
+RUN apk add --no-cache wget
 
 WORKDIR /app
 
@@ -40,13 +46,7 @@ ENV DATA_DIR=/data
 
 RUN mkdir -p /data/uploads
 
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
-COPY --from=builder /app/packages/shared/package.json ./packages/shared/
-COPY --from=builder /app/packages/api/dist ./packages/api/dist
-COPY --from=builder /app/packages/api/package.json ./packages/api/
-COPY --from=builder /app/packages/api/web-dist ./packages/api/web-dist
+COPY --from=builder /deploy /app
 COPY --from=builder /app/data/content.json /data/content.json
 
 EXPOSE 3000
@@ -54,4 +54,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- http://localhost:3000/api/health || exit 1
 
-CMD ["node", "packages/api/dist/index.js"]
+CMD ["node", "dist/index.js"]
