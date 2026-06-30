@@ -111,7 +111,6 @@ export default function AdminApp() {
   const [saveFlash, setSaveFlash] = useState(false);
   const messageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const contentRef = useRef<Content | null>(null);
-  const chicaPhotoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     contentRef.current = content;
@@ -199,7 +198,10 @@ export default function AdminApp() {
   };
 
   const appendChicaFotos = async (chicaId: string, files: FileList | File[]) => {
-    if (!token) return;
+    if (!token) {
+      showMessage('Sesión expirada. Vuelve a entrar al admin.');
+      return;
+    }
     const list = Array.from(files);
     if (list.length === 0) return;
     setUploading(true);
@@ -439,30 +441,27 @@ export default function AdminApp() {
                       </div>
                     ))}
                   </div>
-                  <input
-                    ref={chicaPhotoInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                    multiple
-                    className="hidden"
-                    disabled={uploading || saving}
-                    onChange={async (e) => {
-                      const files = e.target.files;
-                      const chicaId = selectedChica.id;
-                      e.target.value = '';
-                      if (!files?.length) return;
-                      await appendChicaFotos(chicaId, files);
-                    }}
-                  />
-                  <AdminButton
-                    type="button"
-                    variant="ghost"
-                    className="mt-3"
-                    disabled={uploading || saving}
-                    onClick={() => chicaPhotoInputRef.current?.click()}
+                  <label
+                    className={`mt-3 inline-flex cursor-pointer items-center gap-2 rounded border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-gold hover:bg-gold/10 ${
+                      uploading || saving ? 'pointer-events-none opacity-50' : ''
+                    }`}
                   >
-                    + Añadir fotos
-                  </AdminButton>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                      multiple
+                      className="sr-only"
+                      disabled={uploading || saving}
+                      onChange={async (e) => {
+                        const files = e.target.files;
+                        const chicaId = selectedChica.id;
+                        e.target.value = '';
+                        if (!files?.length) return;
+                        await appendChicaFotos(chicaId, files);
+                      }}
+                    />
+                    {uploading ? 'Subiendo...' : '+ Añadir fotos'}
+                  </label>
                   {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div>
