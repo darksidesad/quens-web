@@ -6,6 +6,9 @@
   --color-surface-light: #1c1c1c;
   --color-gold: #c9a84c;
   --color-gold-light: #e8d5a3;
+  --color-silver: #c7ccd1;
+  --color-silver-light: #eef1f4;
+  --color-silver-dark: #8d9298;
   --color-text: #eae8e3;
   --color-muted: #8a8578;
   --color-border: #2a2820;
@@ -30,6 +33,119 @@
 .gold-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* Glassmorphism para el header y tarjetas */
+.glass {
+  background-color: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* Divisor plateado con brillo */
+.silver-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-silver-dark),
+    var(--color-silver-light),
+    var(--color-silver-dark),
+    transparent
+  );
+}
+
+/* Línea decorativa corta plateada (debajo de títulos) */
+.silver-accent {
+  display: block;
+  width: 64px;
+  height: 2px;
+  margin: 1rem auto 0;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-silver),
+    var(--color-silver-light),
+    var(--color-silver),
+    transparent
+  );
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-silver) 50%, transparent);
+}
+
+/* Texto con degradado plateado metálico */
+.silver-text {
+  background: linear-gradient(
+    100deg,
+    var(--color-silver-dark) 0%,
+    var(--color-silver-light) 45%,
+    #ffffff 50%,
+    var(--color-silver-light) 55%,
+    var(--color-silver-dark) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: silver-shine 6s linear infinite;
+}
+
+@keyframes silver-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Aparición suave hacia arriba */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Flotación sutil (indicador de scroll) */
+@keyframes float-y {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-float {
+  animation: float-y 2.2s ease-in-out infinite;
+}
+
+/* Brillo deslizante para botones/tarjetas */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  60%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-float,
+  .silver-text {
+    animation: none;
+  }
+  .animate-fade-up {
+    opacity: 1;
+  }
 }
 
 @keyframes spin {
