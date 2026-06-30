@@ -19,6 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { fetchContent, login, saveContent, uploadFile, getToken, setToken } from '../lib/api';
+import { prepareImageForUpload } from '../lib/imageUpload';
 import { AdminButton } from './AdminButton';
 import { AdminToast } from './AdminToast';
 
@@ -109,6 +110,12 @@ export default function AdminApp() {
   const [message, setMessage] = useState('');
   const [saveFlash, setSaveFlash] = useState(false);
   const messageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contentRef = useRef<Content | null>(null);
+  const chicaPhotoInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
 
   const showMessage = useCallback((text: string, ms = 2500) => {
     if (messageTimer.current) clearTimeout(messageTimer.current);
@@ -116,22 +123,28 @@ export default function AdminApp() {
     messageTimer.current = setTimeout(() => setMessage(''), ms);
   }, []);
 
-  const persist = useCallback(async (updated: Content) => {
-    if (!token) return;
+  const persist = useCallback(async (updated: Content): Promise<boolean> => {
+    if (!token) return false;
     setSaving(true);
     setSaveFlash(false);
     setMessage('');
     const started = Date.now();
+    const normalized: Content = {
+      ...updated,
+      apariencia: updated.apariencia ?? { fondo: '' },
+    };
     try {
-      const saved = await saveContent(updated, token);
+      const saved = await saveContent(normalized, token);
       setContent(saved);
       const wait = Math.max(0, 550 - (Date.now() - started));
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       setSaveFlash(true);
       showMessage('Guardado correctamente');
       setTimeout(() => setSaveFlash(false), 1200);
-    } catch {
-      showMessage('Error al guardar');
+      return true;
+    } catch (err) {
+      showMessage(err instanceof Error ? err.message : 'Error al guardar');
+      return false;
     } finally {
       setSaving(false);
     }
@@ -171,33 +184,44 @@ export default function AdminApp() {
   };
 
   const handleUpload = async (file: File, applyUrl: (url: string) => Content) => {
-    if (!token || !content) return;
+    if (!token || !contentRef.current) return;
     setUploading(true);
     setMessage('');
     try {
-      const url = await uploadFile(file, token);
+      const prepared = await prepareImageForUpload(file);
+      const url = await uploadFile(prepared, token);
       await persist(applyUrl(url));
-    } catch {
-      showMessage('Error al subir imagen');
+    } catch (err) {
+      showMessage(err instanceof Error ? err.message : 'Error al subir imagen');
     } finally {
       setUploading(false);
     }
   };
 
-  const handleUploadFiles = async (files: FileList | File[], buildContent: (urls: string[]) => Content) => {
-    if (!token || !content) return;
+  const appendChicaFotos = async (chicaId: string, files: FileList | File[]) => {
+    if (!token) return;
     const list = Array.from(files);
     if (list.length === 0) return;
     setUploading(true);
     setMessage('');
     try {
       const urls: string[] = [];
-      for (const file of list) {
-        urls.push(await uploadFile(file, token));
+      for (const raw of list) {
+        const prepared = await prepareImageForUpload(raw);
+        urls.push(await uploadFile(prepared, token));
       }
-      await persist(buildContent(urls));
-    } catch {
-      showMessage('Error al subir imagen');
+      const current = contentRef.current;
+      if (!current) throw new Error('Contenido no cargado');
+      const updated: Content = {
+        ...current,
+        apariencia: current.apariencia ?? { fondo: '' },
+        chicas: current.chicas.map((c) =>
+          c.id === chicaId ? { ...c, fotos: [...c.fotos, ...urls] } : c,
+        ),
+      };
+      await persist(updated);
+    } catch (err) {
+      showMessage(err instanceof Error ? err.message : 'Error al subir imagen');
     } finally {
       setUploading(false);
     }
@@ -320,8 +344,10 @@ export default function AdminApp() {
                       activa: false,
                       orden: content.chicas.length,
                     };
-                    persist({ ...content, chicas: [...content.chicas, nueva] });
+                    const updated = { ...content, chicas: [...content.chicas, nueva] };
+                    setContent(updated);
                     setSelectedChicaId(nueva.id);
+                    void persist(updated);
                   }}
                 >
                   + Agregar
@@ -394,7 +420,7 @@ export default function AdminApp() {
                     <label className="text-xs text-gold uppercase tracking-widest">Galería de fotos</label>
                     <span className="text-xs text-muted">{selectedChica.fotos.length} foto(s)</span>
                   </div>
-                  <p className="text-xs text-muted mt-1 mb-2">Puedes subir varias imágenes a la vez.</p>
+                  <p className="text-xs text-muted mt-1 mb-2">JPG, PNG o WEBP. Las fotos del móvil se comprimen automáticamente.</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedChica.fotos.map((f, i) => (
                       <div key={`${f}-${i}`} className="relative">
@@ -405,7 +431,7 @@ export default function AdminApp() {
                           onClick={() => {
                             const fotos = selectedChica.fotos.filter((_, j) => j !== i);
                             const updated = content.chicas.map((c) => (c.id === selectedChica.id ? { ...c, fotos } : c));
-                            persist({ ...content, chicas: updated });
+                            void persist({ ...content, chicas: updated });
                           }}
                         >
                           ×
@@ -413,27 +439,30 @@ export default function AdminApp() {
                       </div>
                     ))}
                   </div>
-                  <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-gold hover:bg-gold/10">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      className="sr-only"
-                      disabled={uploading || saving}
-                      onChange={async (e) => {
-                        const files = e.target.files;
-                        if (!files?.length || !selectedChica) return;
-                        e.target.value = '';
-                        await handleUploadFiles(files, (urls) => ({
-                          ...content,
-                          chicas: content.chicas.map((c) =>
-                            c.id === selectedChica.id ? { ...c, fotos: [...c.fotos, ...urls] } : c,
-                          ),
-                        }));
-                      }}
-                    />
+                  <input
+                    ref={chicaPhotoInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                    multiple
+                    className="hidden"
+                    disabled={uploading || saving}
+                    onChange={async (e) => {
+                      const files = e.target.files;
+                      const chicaId = selectedChica.id;
+                      e.target.value = '';
+                      if (!files?.length) return;
+                      await appendChicaFotos(chicaId, files);
+                    }}
+                  />
+                  <AdminButton
+                    type="button"
+                    variant="ghost"
+                    className="mt-3"
+                    disabled={uploading || saving}
+                    onClick={() => chicaPhotoInputRef.current?.click()}
+                  >
                     + Añadir fotos
-                  </label>
+                  </AdminButton>
                   {uploading && <p className="text-xs text-muted mt-1 animate-pulse">Subiendo imagen...</p>}
                 </div>
                 <div>

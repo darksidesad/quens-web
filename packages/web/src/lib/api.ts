@@ -38,7 +38,10 @@ export async function saveContent(content: Content, token: string): Promise<Cont
     },
     body: JSON.stringify(content),
   });
-  if (!res.ok) throw new Error('Error al guardar');
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { error?: string };
+    throw new Error(body.error === 'Validation failed' ? 'Datos inválidos al guardar' : 'Error al guardar');
+  }
   return res.json();
 }
 
@@ -50,7 +53,12 @@ export async function uploadFile(file: File, token: string): Promise<string> {
     headers: { Authorization: `Bearer ${token}` },
     body: form,
   });
-  if (!res.ok) throw new Error('Error al subir imagen');
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { error?: string };
+    if (res.status === 413) throw new Error('Imagen muy pesada (máx. 10 MB)');
+    if (body.error === 'Invalid file type') throw new Error('Formato no válido. Usa JPG, PNG o WEBP');
+    throw new Error(body.error || 'Error al subir imagen');
+  }
   const { url } = await res.json();
   return url;
 }

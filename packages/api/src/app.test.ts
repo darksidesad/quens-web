@@ -147,4 +147,35 @@ describe('API', () => {
     expect(fileRes.status).toBe(200);
     expect(fileRes.headers.get('content-type')).toContain('image/jpeg');
   });
+
+  it('PUT /api/content guarda fotos en chica', async () => {
+    const token = await login();
+    const form = new FormData();
+    const blob = new Blob([new Uint8Array([0xff, 0xd8, 0xff])], { type: 'image/jpeg' });
+    form.append('file', blob, 'chica.jpg');
+
+    const uploadRes = await request('/api/upload', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    const { url } = await uploadRes.json();
+
+    const updated = structuredClone(defaultContent);
+    updated.chicas[0].fotos = [url];
+
+    const res = await request('/api/content', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updated),
+    });
+    expect(res.status).toBe(200);
+
+    const getRes = await request('/api/chicas/sofia');
+    const chica = await getRes.json();
+    expect(chica.fotos).toContain(url);
+  });
 });
