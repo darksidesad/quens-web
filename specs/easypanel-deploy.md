@@ -15,19 +15,31 @@
 2. Fuente: **GitHub** (conecta tu repo) o **Upload**
 3. Tipo de build: **Dockerfile**
 4. Dockerfile path: `Dockerfile` (raíz del repo)
-5. Puerto: **3000**
+5. Puerto del contenedor: debe coincidir con la variable `PORT` (ej. `3009`)
 
 ## Paso 3: Variables de entorno
 
-En la pestaña **Environment** del servicio:
+En la pestaña **Environment** del servicio (runtime, NO build-args):
 
 ```
-PORT=3000
+PORT=3009
 DATA_DIR=/data
 ADMIN_PASSWORD=tu-password-segura
 JWT_SECRET=genera-un-string-aleatorio-de-32-caracteres
 NODE_ENV=production
 ```
+
+> **Importante:** `PORT` solo en Environment, no en Build Arguments. El puerto del dominio y el del contenedor deben ser el mismo número.
+
+## Paso 3b: Dominio y puerto (crítico)
+
+En **Domains** al agregar tu dominio:
+
+| Campo | Valor |
+|-------|--------|
+| Puerto destino / Container port | **3009** (el mismo que `PORT`) |
+
+Si el dominio apunta al 3000 pero la app corre en 3009 → amarillo y sin web.
 
 ## Paso 4: Volumen persistente
 
