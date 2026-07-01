@@ -1,4 +1,13 @@
 {
+  "apariencia": {
+    "fondo": "",
+    "fondoMovil": {
+      "size": "cover",
+      "position": "center",
+      "repeat": false,
+      "opacity": 0.35
+    }
+  },
   "home": {
     "hero": {
       "titulo": {
@@ -157,6 +166,28 @@
       "horarios": {},
       "activa": true,
       "orden": 2
+    }
+  ],
+  "eventos": [
+    {
+      "id": "e1f2a3b4-c5d6-7890-efab-345678901234",
+      "slug": "noche-de-piedras-calientes",
+      "titulo": {
+        "es": "Noche de Piedras Calientes",
+        "en": "Hot Stone Night"
+      },
+      "descripcion": {
+        "es": "Una velada especial con descuento del 20% en masajes con piedras volcánicas. Cupos limitados.",
+        "en": "A special evening with 20% off hot stone massages. Limited spots."
+      },
+      "fecha": "2026-12-31",
+      "hora": "19:00",
+      "lugar": "Quenns Spa",
+      "imagen": "",
+      "enlace": "",
+      "activo": true,
+      "destacado": true,
+      "orden": 0
     }
   ]
 }

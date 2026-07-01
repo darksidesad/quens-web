@@ -61,7 +61,7 @@ export const EventoSchema = z.object({
   titulo: LocalizedStringSchema,
   descripcion: LocalizedStringSchema,
   fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  hora: z.string().regex(/^\d{2}:\d{2}$/).optional().default(''),
+  hora: z.string().optional().default(''),
   lugar: z.string().default(''),
   imagen: z.string().default(''),
   enlace: z.string().default(''),

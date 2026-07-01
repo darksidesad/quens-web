@@ -913,11 +913,11 @@ export default function AdminApp() {
                       titulo: { es: 'Nuevo evento', en: 'New event' },
                       descripcion: { es: '', en: '' },
                       fecha: new Date().toISOString().slice(0, 10),
-                      hora: '',
+                      hora: undefined as unknown as string,
                       lugar: '',
                       imagen: '',
                       enlace: '',
-                      activo: false,
+                      activo: true,
                       destacado: false,
                       orden: (content.eventos ?? []).length,
                     };
