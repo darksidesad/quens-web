@@ -178,4 +178,42 @@ describe('API', () => {
     const chica = await getRes.json();
     expect(chica.fotos).toContain(url);
   });
+
+  it('GET /api/eventos devuelve eventos activos', async () => {
+    const res = await request('/api/eventos');
+    expect(res.status).toBe(200);
+    const eventos = await res.json();
+    expect(eventos.every((e: { activo: boolean }) => e.activo)).toBe(true);
+  });
+
+  it('GET /api/eventos/:slug devuelve un evento activo', async () => {
+    const res = await request('/api/eventos/noche-de-piedras-calientes');
+    expect(res.status).toBe(200);
+    const evento = await res.json();
+    expect(evento.slug).toBe('noche-de-piedras-calientes');
+  });
+
+  it('PUT /api/content guarda apariencia.fondoMovil', async () => {
+    const token = await login();
+    const updated = structuredClone(defaultContent);
+    updated.apariencia.fondoMovil.size = 'contain';
+    updated.apariencia.fondoMovil.position = 'top';
+    updated.apariencia.fondoMovil.opacity = 0.6;
+
+    const res = await request('/api/content', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updated),
+    });
+    expect(res.status).toBe(200);
+
+    const getRes = await request('/api/content');
+    const data = await getRes.json();
+    expect(data.apariencia.fondoMovil.size).toBe('contain');
+    expect(data.apariencia.fondoMovil.position).toBe('top');
+    expect(data.apariencia.fondoMovil.opacity).toBe(0.6);
+  });
 });

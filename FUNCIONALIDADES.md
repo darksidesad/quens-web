@@ -161,6 +161,15 @@
 - [x] Editar hero: título (ES / EN)
 - [x] Editar hero: subtítulo (ES / EN)
 - [x] Subir / cambiar imagen del hero
+- [x] Controles de visualización del fondo del sitio en móvil (tamaño, posición, mosaico y opacidad del degradado)
+
+### Gestión de eventos (`/eventos`)
+
+- [x] CRUD completo desde el admin
+- [x] Campos: título (ES/EN), descripción (ES/EN), fecha, hora opcional, lugar opcional, imagen de portada, enlace externo, toggle activo/inactivo, destacado
+- [x] Orden manual de eventos
+- [x] Página pública `/eventos` con separación próximos / pasados
+- [x] i18n ES / EN
 
 ### Gestión de contacto
 
@@ -233,6 +242,28 @@
 | i18n URLs | Toggle + localStorage, misma URL |
 | Auth VPS | JWT con `ADMIN_PASSWORD` |
 | Dominio VPS demo | Pendiente (EasyPanel) |
+| Telegram (canal/grupo) | Investigado. Ver detalles abajo |
+| Fondo en móvil | Configurable (size / position / repeat / opacity) desde el admin |
+
+### Integración con Telegram (investigación)
+
+**Objetivo:** poder publicar contenido desde el panel admin hacia un canal o grupo de Telegram con 1 click.
+
+**Opciones evaluadas:**
+
+1. **Bot API (HTTPS, recomendado para este caso).** El admin tendría un botón "Publicar en Telegram" por evento/chica/servicio. El backend haría `POST https://api.telegram.org/bot<TOKEN>/sendPhoto` con `chat_id = @canal_o_grupo` y los datos del item (foto + caption con título y descripción). Es la vía estándar: simple, sin mantener conexiones, sin librerías de MTProto.
+
+   - Crear bot con @BotFather → obtener `TELEGRAM_BOT_TOKEN`.
+   - Añadir el bot como **administrador** del canal o grupo donde publicará.
+   - Channel: `chat_id` puede ser `@username` o el id numérico (`-100...`). Grupo: id numérico.
+   - Variables de entorno sugeridas: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+   - Endpoint propuesto: `POST /api/telegram/post` (auth admin) que recibe `{ type: 'evento'|'chica'|'servicio', id }` y publica usando la URL pública de la imagen.
+
+2. **Webhooks / Bot interactivo.** Más complejo (necesita HTTPS público, lógica conversacional). No aporta valor al caso "1 click desde el admin".
+
+3. **Cuenta de usuario (MTProto / gram.js).** Permite publicar como persona en vez de bot. Mayor dependencia (sesión, mantenimiento), librerías menos estables. **No recomendado** salvo que el cliente quiera publicar desde una cuenta personal ya existente.
+
+**Decisión recomendada:** opción 1 (Bot API). Próximo paso, cuando se apruebe la integración: crear bot, añadirlo como admin del canal/grupo destino y exponer `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` en `.env`. La lógica de "1 click + mostrar resultado (éxito/error + link al mensaje publicado)" se implementa directamente en las pantallas de admin ya existentes.
 
 ---
 

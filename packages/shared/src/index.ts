@@ -27,6 +27,50 @@ export const ServicioSchema = z.object({
 
 export type Servicio = z.infer<typeof ServicioSchema>;
 
+/** Estilo de fondo del sitio en móvil. */
+export const FondoMovilSizeSchema = z.enum(['cover', 'contain', 'auto']);
+export type FondoMovilSize = z.infer<typeof FondoMovilSizeSchema>;
+
+export const FondoMovilPositionSchema = z.enum([
+  'center',
+  'top',
+  'bottom',
+  'left',
+  'right',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+]);
+export type FondoMovilPosition = z.infer<typeof FondoMovilPositionSchema>;
+
+export const AparienciaSchema = z.object({
+  fondo: z.string().default(''),
+  fondoMovil: z.object({
+    size: FondoMovilSizeSchema.default('cover'),
+    position: FondoMovilPositionSchema.default('center'),
+    repeat: z.boolean().default(false),
+    opacity: z.number().min(0).max(1).default(0.35),
+  }).default({ size: 'cover', position: 'center', repeat: false, opacity: 0.35 }),
+});
+export type Apariencia = z.infer<typeof AparienciaSchema>;
+
+export const EventoSchema = z.object({
+  id: z.string().uuid(),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  titulo: LocalizedStringSchema,
+  descripcion: LocalizedStringSchema,
+  fecha: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  hora: z.string().regex(/^\d{2}:\d{2}$/).optional().default(''),
+  lugar: z.string().default(''),
+  imagen: z.string().default(''),
+  enlace: z.string().default(''),
+  activo: z.boolean(),
+  destacado: z.boolean().default(false),
+  orden: z.number().int(),
+});
+export type Evento = z.infer<typeof EventoSchema>;
+
 export const ChicaSchema = z.object({
   id: z.string().uuid(),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -43,11 +87,10 @@ export const ChicaSchema = z.object({
 export type Chica = z.infer<typeof ChicaSchema>;
 
 export const ContentSchema = z.object({
-  apariencia: z
-    .object({
-      fondo: z.string().default(''),
-    })
-    .default({ fondo: '' }),
+  apariencia: AparienciaSchema.default({
+    fondo: '',
+    fondoMovil: { size: 'cover', position: 'center', repeat: false, opacity: 0.35 },
+  }),
   home: z.object({
     hero: z.object({
       titulo: LocalizedStringSchema,
@@ -67,6 +110,7 @@ export const ContentSchema = z.object({
   }),
   servicios: z.array(ServicioSchema),
   chicas: z.array(ChicaSchema),
+  eventos: z.array(EventoSchema).default([]),
 });
 
 export type Content = z.infer<typeof ContentSchema>;
@@ -109,6 +153,7 @@ export const UI_STRINGS = {
     navHome: 'Inicio',
     navServices: 'Servicios',
     navTeam: 'Chicas',
+    navEvents: 'Eventos',
     book: 'Reservar',
     viewProfile: 'Ver perfil',
     ourServices: 'Nuestros servicios',
@@ -124,11 +169,19 @@ export const UI_STRINGS = {
     price: 'Precio',
     allServices: 'Todos los servicios',
     meetTeam: 'Conoce a nuestro equipo',
+    upcomingEvents: 'Próximos eventos',
+    pastEvents: 'Eventos pasados',
+    noEvents: 'No hay eventos programados por ahora.',
+    eventDate: 'Fecha',
+    eventLocation: 'Lugar',
+    eventTime: 'Hora',
+    eventMoreInfo: 'Más información',
   },
   en: {
     navHome: 'Home',
     navServices: 'Services',
     navTeam: 'Team',
+    navEvents: 'Events',
     book: 'Book now',
     viewProfile: 'View profile',
     ourServices: 'Our services',
@@ -144,6 +197,13 @@ export const UI_STRINGS = {
     price: 'Price',
     allServices: 'All services',
     meetTeam: 'Meet our team',
+    upcomingEvents: 'Upcoming events',
+    pastEvents: 'Past events',
+    noEvents: 'No events scheduled at the moment.',
+    eventDate: 'Date',
+    eventLocation: 'Location',
+    eventTime: 'Time',
+    eventMoreInfo: 'More information',
   },
 } as const;
 
@@ -167,9 +227,53 @@ export function getSortedServicios(content: Content): Servicio[] {
   return [...content.servicios].sort((a, b) => a.orden - b.orden);
 }
 
+/** Devuelve los eventos activos ordenados (próximos primero según la fecha actual). */
+export function getActiveEventos(
+  content: Content,
+  options: { onlyUpcoming?: boolean; now?: Date } = {},
+): Evento[] {
+  const now = options.now ?? new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  return [...(content.eventos ?? [])]
+    .filter((e) => e.activo)
+    .filter((e) => (options.onlyUpcoming ? e.fecha >= today : true))
+    .sort((a, b) => {
+      if (a.destacado !== b.destacado) return a.destacado ? -1 : 1;
+      return a.fecha === b.fecha ? a.orden - b.orden : a.fecha.localeCompare(b.fecha);
+    });
+}
+
+export function getActiveEventosOrden(content: Content): Evento[] {
+  return getActiveEventos(content).sort((a, b) => a.orden - b.orden);
+}
+
+export function getEventoBySlug(content: Content, slug: string): Evento | undefined {
+  return (content.eventos ?? []).find((e) => e.slug === slug && e.activo);
+}
+
+/** Formato corto para fecha 'YYYY-MM-DD' en es/en. */
+export function formatEventDate(iso: string, lang: Lang): string {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return new Intl.DateTimeFormat(lang === 'es' ? 'es-CO' : 'en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
 export const defaultContent: Content = {
   apariencia: {
     fondo: '',
+    fondoMovil: {
+      size: 'cover',
+      position: 'center',
+      repeat: false,
+      opacity: 0.35,
+    },
   },
   home: {
     hero: {
@@ -260,6 +364,28 @@ export const defaultContent: Content = {
       },
       activa: true,
       orden: 1,
+    },
+  ],
+  eventos: [
+    {
+      id: 'e1f2a3b4-c5d6-7890-efab-345678901234',
+      slug: 'noche-de-piedras-calientes',
+      titulo: {
+        es: 'Noche de Piedras Calientes',
+        en: 'Hot Stone Night',
+      },
+      descripcion: {
+        es: 'Una velada especial con descuento del 20% en masajes con piedras volcánicas. Cupos limitados.',
+        en: 'A special evening with 20% off hot stone massages. Limited spots.',
+      },
+      fecha: '2099-12-31',
+      hora: '19:00',
+      lugar: 'Quenns Spa',
+      imagen: '',
+      enlace: '',
+      activo: true,
+      destacado: true,
+      orden: 0,
     },
   ],
 };

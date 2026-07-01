@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EventosPage from '../components/EventosPage';
+---
+
+<BaseLayout
+  title="Eventos | Quenns Spa"
+  description="Descubre los próximos eventos y veladas especiales de Quenns Spa: noches de bienestar, ofertas y experiencias únicas."
+>
+  <EventosPage client:load />
+</BaseLayout>

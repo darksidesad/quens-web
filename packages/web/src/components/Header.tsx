@@ -9,6 +9,7 @@ export function Header() {
     { href: '/', label: ui('navHome', lang) },
     { href: '/servicios', label: ui('navServices', lang) },
     { href: '/chicas', label: ui('navTeam', lang) },
+    { href: '/eventos', label: ui('navEvents', lang) },
   ];
 
   return (

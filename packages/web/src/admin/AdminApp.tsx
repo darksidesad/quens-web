@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Content, Chica, Servicio, Dia } from '@quenns/shared';
+import type { Content, Chica, Servicio, Dia, Evento, Apariencia } from '@quenns/shared';
 import { DIA_LABELS } from '@quenns/shared';
 import {
   DndContext,
@@ -23,7 +23,7 @@ import { prepareImageForUpload } from '../lib/imageUpload';
 import { AdminButton } from './AdminButton';
 import { AdminToast } from './AdminToast';
 
-type Tab = 'dashboard' | 'chicas' | 'servicios' | 'home' | 'contacto';
+type Tab = 'dashboard' | 'chicas' | 'servicios' | 'home' | 'eventos' | 'contacto';
 
 const DIAS: Dia[] = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'];
 
@@ -104,6 +104,7 @@ export default function AdminApp() {
   const [tab, setTab] = useState<Tab>('dashboard');
   const [selectedChicaId, setSelectedChicaId] = useState<string | null>(null);
   const [selectedServicioId, setSelectedServicioId] = useState<string | null>(null);
+  const [selectedEventoId, setSelectedEventoId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
@@ -130,7 +131,8 @@ export default function AdminApp() {
     const started = Date.now();
     const normalized: Content = {
       ...updated,
-      apariencia: updated.apariencia ?? { fondo: '' },
+      apariencia: updated.apariencia ?? { fondo: '', fondoMovil: { size: 'cover', position: 'center', repeat: false, opacity: 0.35 } },
+      eventos: updated.eventos ?? [],
     };
     try {
       const saved = await saveContent(normalized, token);
@@ -281,6 +283,7 @@ export default function AdminApp() {
     { id: 'dashboard', label: 'Resumen' },
     { id: 'chicas', label: 'Chicas' },
     { id: 'servicios', label: 'Servicios' },
+    { id: 'eventos', label: 'Eventos' },
     { id: 'home', label: 'Home' },
     { id: 'contacto', label: 'Contacto' },
   ];
@@ -311,7 +314,7 @@ export default function AdminApp() {
 
       <main className="max-w-5xl mx-auto px-6 py-8">
         {tab === 'dashboard' && (
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-4 gap-6">
             <div className="bg-surface border border-border p-6 rounded-lg text-center">
               <p className="text-3xl text-gold">{content.chicas.filter((c) => c.activa).length}</p>
               <p className="text-sm text-muted mt-1">Chicas activas</p>
@@ -323,6 +326,10 @@ export default function AdminApp() {
             <div className="bg-surface border border-border p-6 rounded-lg text-center">
               <p className="text-3xl text-gold">{content.servicios.length}</p>
               <p className="text-sm text-muted mt-1">Servicios</p>
+            </div>
+            <div className="bg-surface border border-border p-6 rounded-lg text-center">
+              <p className="text-3xl text-gold">{(content.eventos ?? []).filter((e) => e.activo).length}</p>
+              <p className="text-sm text-muted mt-1">Eventos activos</p>
             </div>
           </div>
         )}
@@ -748,6 +755,113 @@ export default function AdminApp() {
                 )}
               </div>
             </div>
+
+            <div className="border-t border-border pt-6 space-y-4">
+              <div>
+                <p className="text-xs text-gold uppercase tracking-widest">Fondo en móvil</p>
+                <p className="text-xs text-muted mt-1">
+                  Define cómo se ve la imagen de fondo en celulares (el escritorio sigue cubriendo la pantalla).
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-gold uppercase">Tamaño</label>
+                  <select
+                    className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                    value={content.apariencia.fondoMovil.size}
+                    onChange={(e) =>
+                      setContent({
+                        ...content,
+                        apariencia: {
+                          ...content.apariencia,
+                          fondoMovil: { ...content.apariencia.fondoMovil, size: e.target.value as Apariencia['fondoMovil']['size'] },
+                        },
+                      })
+                    }
+                  >
+                    <option value="cover">Cubrir pantalla (cover)</option>
+                    <option value="contain">Imagen completa (contain)</option>
+                    <option value="auto">Tamaño original (auto)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-gold uppercase">Posición</label>
+                  <select
+                    className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                    value={content.apariencia.fondoMovil.position}
+                    onChange={(e) =>
+                      setContent({
+                        ...content,
+                        apariencia: {
+                          ...content.apariencia,
+                          fondoMovil: { ...content.apariencia.fondoMovil, position: e.target.value as Apariencia['fondoMovil']['position'] },
+                        },
+                      })
+                    }
+                  >
+                    <option value="center">Centro</option>
+                    <option value="top">Arriba</option>
+                    <option value="bottom">Abajo</option>
+                    <option value="left">Izquierda</option>
+                    <option value="right">Derecha</option>
+                    <option value="top-left">Arriba izquierda</option>
+                    <option value="top-right">Arriba derecha</option>
+                    <option value="bottom-left">Abajo izquierda</option>
+                    <option value="bottom-right">Abajo derecha</option>
+                  </select>
+                </div>
+              </div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={content.apariencia.fondoMovil.repeat}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      apariencia: {
+                        ...content.apariencia,
+                        fondoMovil: { ...content.apariencia.fondoMovil, repeat: e.target.checked },
+                      },
+                    })
+                  }
+                />
+                Repetir como mosaico
+              </label>
+              <div>
+                <label className="text-xs text-gold uppercase">
+                  Opacidad del fondo: {content.apariencia.fondoMovil.opacity.toFixed(2)}
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  className="w-full mt-2 accent-[#c9a84c]"
+                  value={content.apariencia.fondoMovil.opacity}
+                  onChange={(e) =>
+                    setContent({
+                      ...content,
+                      apariencia: {
+                        ...content.apariencia,
+                        fondoMovil: { ...content.apariencia.fondoMovil, opacity: Number(e.target.value) },
+                      },
+                    })
+                  }
+                />
+                <p className="text-xs text-muted mt-1">0 = sólo degradado oscuro · 1 = fondo completamente visible.</p>
+              </div>
+              <AdminButton
+                loading={saving}
+                success={saveFlash}
+                disabled={!content.apariencia.fondo}
+                onClick={() => persist(content)}
+              >
+                Guardar fondo móvil
+              </AdminButton>
+              {!content.apariencia.fondo && (
+                <p className="text-xs text-muted">Sube una imagen de fondo arriba para aplicar cambios en móvil.</p>
+              )}
+            </div>
             <LocalizedInput
               label="Título hero"
               value={content.home.hero.titulo}
@@ -781,6 +895,225 @@ export default function AdminApp() {
             <AdminButton loading={saving} success={saveFlash} className="w-full" onClick={() => persist(content)}>
               Guardar home
             </AdminButton>
+          </div>
+        )}
+
+        {tab === 'eventos' && (
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div>
+              <div className="flex justify-between mb-4">
+                <h2 className="text-gold">Eventos</h2>
+                <button
+                  type="button"
+                  className="text-xs bg-gold text-bg px-3 py-1"
+                  onClick={() => {
+                    const nuevo: Evento = {
+                      id: uuid(),
+                      slug: `evento-${Date.now()}`,
+                      titulo: { es: 'Nuevo evento', en: 'New event' },
+                      descripcion: { es: '', en: '' },
+                      fecha: new Date().toISOString().slice(0, 10),
+                      hora: '',
+                      lugar: '',
+                      imagen: '',
+                      enlace: '',
+                      activo: false,
+                      destacado: false,
+                      orden: (content.eventos ?? []).length,
+                    };
+                    const updated = { ...content, eventos: [...(content.eventos ?? []), nuevo] };
+                    setContent(updated);
+                    setSelectedEventoId(nuevo.id);
+                    void persist(updated);
+                  }}
+                >
+                  + Agregar
+                </button>
+              </div>
+              <p className="text-xs text-muted mb-3">Solo se ven activos en la web pública.</p>
+              <div className="space-y-2">
+                {[...(content.eventos ?? [])].sort((a, b) => a.orden - b.orden).map((e) => (
+                  <button
+                    key={e.id}
+                    type="button"
+                    onClick={() => setSelectedEventoId(e.id)}
+                    className={`w-full text-left p-3 border rounded text-sm ${selectedEventoId === e.id ? 'border-gold bg-gold/10' : 'border-border bg-surface'}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${e.activo ? 'bg-green-500' : 'bg-red-500'}`} />
+                      <span className="flex-1 truncate">{e.titulo.es || '(sin título)'}</span>
+                      <span className="text-xs text-muted">{e.fecha}</span>
+                    </div>
+                  </button>
+                ))}
+                {(!content.eventos || content.eventos.length === 0) && (
+                  <p className="text-xs text-muted">Aún no hay eventos. Crea el primero con “+ Agregar”.</p>
+                )}
+              </div>
+            </div>
+
+            {(() => {
+              const eventos = content.eventos ?? [];
+              const selectedEvento = eventos.find((e) => e.id === selectedEventoId);
+              if (!selectedEvento) {
+                return <p className="text-muted text-sm">Selecciona un evento para editarlo.</p>;
+              }
+              const update = (patch: Partial<Evento>) => {
+                const updated = eventos.map((e) => (e.id === selectedEvento.id ? { ...e, ...patch } : e));
+                setContent({ ...content, eventos: updated });
+              };
+              return (
+                <div className="bg-surface border border-border p-6 rounded-lg space-y-4">
+                  <div className="flex flex-wrap justify-between gap-2">
+                    <h3 className="text-gold">Editar evento</h3>
+                    <div className="flex gap-3">
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={selectedEvento.activo}
+                          onChange={(e) => update({ activo: e.target.checked })}
+                        />
+                        Activo
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={selectedEvento.destacado}
+                          onChange={(e) => update({ destacado: e.target.checked })}
+                        />
+                        Destacado
+                      </label>
+                    </div>
+                  </div>
+                  <LocalizedInput
+                    label="Título"
+                    value={selectedEvento.titulo}
+                    onChange={(titulo) => update({ titulo })}
+                  />
+                  <div>
+                    <label className="text-xs text-gold uppercase">Slug</label>
+                    <input
+                      className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                      value={selectedEvento.slug}
+                      onChange={(e) => update({ slug: e.target.value })}
+                    />
+                    <p className="text-xs text-muted mt-1">Solo letras minúsculas, números y guiones.</p>
+                  </div>
+                  <LocalizedInput
+                    label="Descripción"
+                    value={selectedEvento.descripcion}
+                    onChange={(descripcion) => update({ descripcion })}
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs text-gold uppercase">Fecha</label>
+                      <input
+                        type="date"
+                        className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                        value={selectedEvento.fecha}
+                        onChange={(e) => update({ fecha: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gold uppercase">Hora (opcional)</label>
+                      <input
+                        type="time"
+                        className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                        value={selectedEvento.hora || ''}
+                        onChange={(e) => update({ hora: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs text-gold uppercase">Lugar (opcional)</label>
+                    <input
+                      className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                      value={selectedEvento.lugar}
+                      onChange={(e) => update({ lugar: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gold uppercase">Enlace externo (opcional)</label>
+                    <input
+                      className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                      placeholder="https://..."
+                      value={selectedEvento.enlace}
+                      onChange={(e) => update({ enlace: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gold uppercase">Imagen de portada</label>
+                    {selectedEvento.imagen && (
+                      <div className="relative inline-block mt-2">
+                        <img src={selectedEvento.imagen} alt="" className="w-40 h-24 object-cover rounded border border-border" />
+                        <button
+                          type="button"
+                          className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full"
+                          onClick={() => update({ imagen: '' })}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="mt-2 block w-full text-sm text-muted file:mr-4 file:cursor-pointer file:rounded file:border-0 file:bg-gold file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-widest file:text-bg hover:file:bg-gold-light disabled:opacity-50"
+                      disabled={uploading || saving}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        e.target.value = '';
+                        if (!file) return;
+                        void handleUpload(file, (url) => ({
+                          ...content,
+                          eventos: (content.eventos ?? []).map((x) =>
+                            x.id === selectedEvento.id ? { ...x, imagen: url } : x,
+                          ),
+                        }));
+                      }}
+                    />
+                    {uploading && <p className="text-xs text-gold mt-2 animate-pulse">Subiendo imagen...</p>}
+                  </div>
+                  <div>
+                    <label className="text-xs text-gold uppercase">Orden</label>
+                    <input
+                      type="number"
+                      className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                      value={selectedEvento.orden}
+                      onChange={(e) => update({ orden: Number(e.target.value) })}
+                    />
+                    <p className="text-xs text-muted mt-1">Menor número aparece primero.</p>
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <AdminButton loading={saving} success={saveFlash} className="flex-1" onClick={() => persist(content)}>
+                      Guardar
+                    </AdminButton>
+                    <a
+                      href="/eventos"
+                      target="_blank"
+                      rel="noopener"
+                      className="px-4 py-2 border border-gold text-gold text-xs"
+                    >
+                      Vista previa
+                    </a>
+                    <AdminButton
+                      variant="danger"
+                      loading={saving}
+                      onClick={() => {
+                        if (!confirm('¿Eliminar este evento?')) return;
+                        persist({
+                          ...content,
+                          eventos: (content.eventos ?? []).filter((e) => e.id !== selectedEvento.id),
+                        });
+                        setSelectedEventoId(null);
+                      }}
+                    >
+                      Eliminar
+                    </AdminButton>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 

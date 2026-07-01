@@ -51,9 +51,27 @@
   background-size: cover;
 }
 
+/* Capa móvil: visible solo <768px. Posicionada detrás del contenido principal
+   y por encima del degradado (que aplica según la opacidad configurada). */
+.site-bg-layer-mobile {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
 @media (max-width: 768px) {
-  .site-bg-image {
-    background-size: contain;
+  .site-bg-image:not(.site-bg-layer-mobile) {
+    display: none;
+  }
+  .site-bg-layer-mobile {
+    display: block;
   }
 }
 

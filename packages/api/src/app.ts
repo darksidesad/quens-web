@@ -8,7 +8,9 @@ import { readFile } from 'node:fs/promises';
 import {
   ContentSchema,
   getActiveChicas,
+  getActiveEventos,
   getChicaBySlug,
+  getEventoBySlug,
 } from '@quenns/shared';
 import {
   ensureDataDir,
@@ -76,6 +78,23 @@ export function createApp(config: AppConfig) {
     const chica = getChicaBySlug(content, c.req.param('slug'));
     if (!chica) return c.json({ error: 'Not found' }, 404);
     return c.json(chica);
+  });
+
+  app.get('/api/eventos', async (c) => {
+    await ensureDataDir(config.dataDir);
+    const content = await readContent(config.dataDir);
+    const upcoming = c.req.query('upcoming') === '1' || c.req.query('upcoming') === 'true';
+    return upcoming
+      ? c.json(getActiveEventos(content, { onlyUpcoming: true }))
+      : c.json(getActiveEventos(content));
+  });
+
+  app.get('/api/eventos/:slug', async (c) => {
+    await ensureDataDir(config.dataDir);
+    const content = await readContent(config.dataDir);
+    const evento = getEventoBySlug(content, c.req.param('slug'));
+    if (!evento) return c.json({ error: 'Not found' }, 404);
+    return c.json(evento);
   });
 
   app.put('/api/content', authMiddleware, async (c) => {
