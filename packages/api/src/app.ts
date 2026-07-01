@@ -144,7 +144,7 @@ export function createApp(config: AppConfig) {
   });
 
   if (config.staticDir && existsSync(config.staticDir)) {
-    app.get('/_astro/*', serveStatic({ root: join(config.staticDir, '_astro') }));
+    app.get('/_astro/*', serveStatic({ root: config.staticDir }));
     app.get('/favicon.svg', serveStatic({ path: join(config.staticDir, 'favicon.svg') }));
 
     app.get('/chicas/:slug', async (c) => {
