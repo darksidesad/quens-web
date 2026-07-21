@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serveStatic } from '@hono/node-server/serve-static';
-import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
@@ -163,11 +163,8 @@ export function createApp(config: AppConfig) {
 
     app.get('*', serveStatic({ root: config.staticDir }));
     app.get('*', (c) => {
-      const indexPath = join(config.staticDir!, 'index.html');
-      if (existsSync(indexPath)) {
-        return c.html(readFileSync(indexPath, 'utf-8'));
-      }
-      return c.notFound();
+      // Redirect unknown routes to the homepage
+      return c.redirect('/');
     });
   }
 

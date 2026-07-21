@@ -18,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { fetchContent, login, saveContent, uploadFile, getToken, setToken } from '../lib/api';
+import { fetchContent, login, saveContent, uploadFile, getToken, setToken, isTokenExpired } from '../lib/api';
 import { prepareImageForUpload } from '../lib/imageUpload';
 import { AdminButton } from './AdminButton';
 import { AdminToast } from './AdminToast';
@@ -158,8 +158,27 @@ export default function AdminApp() {
 
   useEffect(() => {
     const t = getToken();
-    if (t) setTokenState(t);
+    if (t) {
+      if (isTokenExpired(t)) {
+        // Token already expired — clear it so the login form is shown
+        setToken(null);
+      } else {
+        setTokenState(t);
+      }
+    }
   }, []);
+
+  // Periodically check token expiry (every 60 s) and log out when it expires
+  useEffect(() => {
+    if (!token) return;
+    const id = setInterval(() => {
+      if (isTokenExpired(token)) {
+        setToken(null);
+        setTokenState(null);
+      }
+    }, 60_000);
+    return () => clearInterval(id);
+  }, [token]);
 
   const load = useCallback(async () => {
     const data = await fetchContent();
@@ -861,6 +880,16 @@ export default function AdminApp() {
               {!content.apariencia.fondo && (
                 <p className="text-xs text-muted">Sube una imagen de fondo arriba para aplicar cambios en móvil.</p>
               )}
+            </div>
+            <div>
+              <label className="text-xs text-gold uppercase">WhatsApp (Botón de reservas en Home)</label>
+              <input
+                className="w-full bg-bg border border-border rounded px-3 py-2 text-sm mt-1"
+                placeholder="+573001234567"
+                value={content.contacto.whatsapp}
+                onChange={(e) => setContent({ ...content, contacto: { ...content.contacto, whatsapp: e.target.value } })}
+              />
+              <p className="text-xs text-muted mt-1">Este número es el que abre WhatsApp al hacer clic en Reservar en la Home y en el botón flotante.</p>
             </div>
             <LocalizedInput
               label="Título hero"
