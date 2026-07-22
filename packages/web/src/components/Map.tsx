@@ -38,5 +38,12 @@ export function Map({ lat, lng, className = '' }: MapProps) {
     };
   }, [lat, lng]);
 
-  return <div ref={ref} className={`rounded-lg border border-border ${className}`} style={{ minHeight: 280 }} />;
+  return (
+    <div
+      ref={ref}
+      className={`rounded-lg border border-border cursor-pointer ${className}`}
+      style={{ minHeight: 280 }}
+      onClick={() => window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank')}
+    />
+  );
 }
