@@ -19,11 +19,18 @@ export function Map({ lat, lng, className = '' }: MapProps) {
 
       if (!ref.current) return;
       map = L.map(ref.current, { scrollWheelZoom: false }).setView([lat, lng], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
         maxZoom: 19,
       }).addTo(map);
-      L.marker([lat, lng]).addTo(map);
+      const icon = L.divIcon({
+        className: '',
+        html: '<span style="font-size: 2rem; line-height: 1;">💋</span>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      });
+      L.marker([lat, lng], { icon }).addTo(map);
     })();
 
     return () => {
